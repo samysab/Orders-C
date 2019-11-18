@@ -9,8 +9,6 @@ void fenetre(GtkWidget *widget);
 
 int main(int argc,char **argv)
 {
-
-
     gtk_init(&argc,&argv);
 
     fenetre(GTK_WINDOW_TOPLEVEL);
