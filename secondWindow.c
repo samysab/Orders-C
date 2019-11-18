@@ -4,30 +4,22 @@
 #define EXEMPLE_1 0
 
 void OnDestroy(GtkWidget *pWidget, gpointer pData);
-void fenetre(GtkWidget *widget);
-
+void addBtn(GtkWidget *pWindow, gint iExemple);
 
 int main(int argc,char **argv)
 {
-
-
-    gtk_init(&argc,&argv);
-
-    fenetre(GTK_WINDOW_TOPLEVEL);
-
-    return EXIT_SUCCESS;
-}
-
-void fenetre(GtkWidget *widget){
-
-       /* Déclaration des widget */
+    /* Déclaration des widget */
     GtkWidget *pWindow;
     GtkWidget *pLabelOrdersC;
     GtkWidget *pLabelDescription;
     gchar* sUtf8;
     GtkWidget *pButton[3];
     GtkWidget *pTable;
-            /* Création de la fenêtre */
+
+    gtk_init(&argc,&argv);
+
+
+        /* Création de la fenêtre */
     pWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
         // Ajouter un titre à la fenetre
     gtk_window_set_title(GTK_WINDOW(pWindow), "Page acceuil");
@@ -55,9 +47,8 @@ void fenetre(GtkWidget *widget){
 
 
 
-
-    pButton[0] = gtk_button_new_with_label("Sur Place");
-    pButton[1] = gtk_button_new_with_label("A Emporter");
+    pButton[0] = gtk_button_new_with_label("dzdqzdq Place");
+    pButton[1] = gtk_button_new_with_label("A Emdqzdqzdporter");
     pButton[2] = gtk_button_new_with_label("Admin");
 
     gtk_table_attach(GTK_TABLE(pTable), pButton[0], 0, 2, 3, 4, GTK_EXPAND | GTK_FILL , GTK_EXPAND, 0,0);
@@ -68,12 +59,12 @@ void fenetre(GtkWidget *widget){
 
 
     /* Connexion du signal "destroy" */
-    g_signal_connect(G_OBJECT(pWindow), "destroy", G_CALLBACK(OnDestroy), NULL);
+    g_signal_connect(G_OBJECT(pWindow), "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
 
     //Permet d'afficher toute les infos sur la fenetre
     gtk_container_add(GTK_CONTAINER(pWindow), pLabelOrdersC);
-    gtk_container_add(GTK_CONTAINER(pWindow), pLabelDescription);
+        gtk_container_add(GTK_CONTAINER(pWindow), pLabelDescription);
 
 
 
@@ -85,7 +76,10 @@ void fenetre(GtkWidget *widget){
     /* Demarrage de la boucle evenementielle */
     gtk_main();
 
+    return EXIT_SUCCESS;
 }
+
+
 
 void OnDestroy(GtkWidget *pWidget, gpointer pData)
 {
