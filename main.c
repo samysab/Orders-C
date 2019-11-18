@@ -58,8 +58,8 @@ void fenetre(GtkWidget *widget){
     pButton[1] = gtk_button_new_with_label("A Emporter");
     pButton[2] = gtk_button_new_with_label("Admin");
 
-    gtk_table_attach(GTK_TABLE(pTable), pButton[0], 0, 2, 3, 4, GTK_EXPAND | GTK_FILL , GTK_EXPAND, 0,0);
-    gtk_table_attach(GTK_TABLE(pTable), pButton[1], 2, 4, 3, 4, GTK_EXPAND | GTK_FILL , GTK_EXPAND, 0,0);
+    gtk_table_attach(GTK_TABLE(pTable), pButton[0], 0, 2, 3, 4, GTK_EXPAND | GTK_FILL , GTK_EXPAND | GTK_FILL, 0,0);
+    gtk_table_attach(GTK_TABLE(pTable), pButton[1], 2, 4, 3, 4, GTK_EXPAND | GTK_FILL , GTK_EXPAND | GTK_FILL, 0,0);
     gtk_table_attach(GTK_TABLE(pTable), pButton[2], 3, 4, 0, 1, GTK_EXPAND | GTK_FILL , GTK_EXPAND, 0,0);
     gtk_table_attach(GTK_TABLE(pTable), pLabelOrdersC, 1, 3, 1, 2,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
     gtk_table_attach(GTK_TABLE(pTable), pLabelDescription, 1, 3, 2, 3,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
