@@ -1,5 +1,6 @@
 
 void OnDestroy(GtkWidget *pWidget, gpointer pData);
+void orderWindow(GtkWidget *widget);
 
 
 void Windowscommande(GtkWidget *widget){
@@ -56,6 +57,9 @@ void Windowscommande(GtkWidget *widget){
     gtk_table_attach(GTK_TABLE(pTable), pLabelOrdersC, 0, 2, 0, 1,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
     gtk_table_attach(GTK_TABLE(pTable), pLabelOrders, 0, 1, 5, 6,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
     gtk_table_attach(GTK_TABLE(pTable), pButton[4], 5, 6, 6, 7, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
+
+
+    g_signal_connect(G_OBJECT(pButton[4]),"clicked",G_CALLBACK(orderWindow),NULL);
 
     /* Connexion du signal "destroy" */
     g_signal_connect(G_OBJECT(pWindow), "destroy", G_CALLBACK(OnDestroy), NULL);
