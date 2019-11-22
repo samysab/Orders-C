@@ -8,6 +8,7 @@ void orderWindow(GtkWidget *widget){
     gchar* sUtf8;
     GtkWidget *pTable;
     GtkWidget* text_view;
+    GtkWidget *pButton[2];
 
             /* Création de la fenêtre */
     pWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -40,10 +41,12 @@ void orderWindow(GtkWidget *widget){
     text_view=gtk_text_view_new();
 
 
+    pButton[0] = gtk_button_new_with_label("Terminer la commande");
 
     gtk_table_attach(GTK_TABLE(pTable), pLabelRecapitulatif, 0, 2, 0, 1,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
     gtk_table_attach(GTK_TABLE(pTable), pLabelCommentary, 0, 2, 2, 3,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
-    gtk_table_attach(GTK_TABLE(pTable), text_view, 0, 2, 3, 4,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
+    gtk_table_attach(GTK_TABLE(pTable), text_view, 0, 4, 3, 4,GTK_EXPAND| GTK_FILL ,  GTK_EXPAND | GTK_FILL, 0,0);
+    gtk_table_attach(GTK_TABLE(pTable), pButton[0], 3, 4, 4, 5,GTK_EXPAND,  GTK_EXPAND  , 0,0);
 
     /* Connexion du signal "destroy" */
     g_signal_connect(G_OBJECT(pWindow), "destroy", G_CALLBACK(OnDestroy), NULL);
