@@ -47,6 +47,7 @@ void firstWindow(GtkWidget *widget){
     gtk_table_attach(GTK_TABLE(pTable), pLabelOrdersC, 1, 3, 1, 2,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
     gtk_table_attach(GTK_TABLE(pTable), pLabelDescription, 1, 3, 2, 3,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
 
+    g_signal_connect(G_OBJECT(pButton[0]),"clicked",G_CALLBACK(Windowscommande),NULL);
 
     /* Connexion du signal "destroy" */
     g_signal_connect(G_OBJECT(pWindow), "destroy", G_CALLBACK(OnDestroy), NULL);

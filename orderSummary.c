@@ -3,10 +3,12 @@ void orderWindow(GtkWidget *widget){
 
        /* Déclaration des widget */
     GtkWidget *pWindow;
-    GtkWidget *pLabelOrdersC;
-    GtkWidget *pLabelDescription;
+    GtkWidget *pLabelRecapitulatif;
+    GtkWidget *pLabelCommentary;
     gchar* sUtf8;
     GtkWidget *pTable;
+    GtkWidget* text_view;
+
             /* Création de la fenêtre */
     pWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
         // Ajouter un titre à la fenetre
@@ -19,32 +21,37 @@ void orderWindow(GtkWidget *widget){
     gtk_container_add(GTK_CONTAINER(pWindow), GTK_WIDGET(pTable));
 
    /* Création du label*/
-    pLabelOrdersC = gtk_label_new(NULL);
+    pLabelRecapitulatif = gtk_label_new(NULL);
     sUtf8 = g_locale_from_utf8("<b><u><span size=\"20\">Votre Recapitulatif </span></u></b>",-1, NULL,NULL, NULL);     //-1 permet de laisser la lib calculer la longueur de la chaine
-    gtk_label_set_markup(GTK_LABEL(pLabelOrdersC), sUtf8);
+    gtk_label_set_markup(GTK_LABEL(pLabelRecapitulatif), sUtf8);
     g_free(sUtf8);
-    gtk_label_set_justify(GTK_LABEL(pLabelOrdersC), GTK_JUSTIFY_CENTER);
+    gtk_label_set_justify(GTK_LABEL(pLabelRecapitulatif), GTK_JUSTIFY_CENTER);
 
 
       /* Création du label*/
-    pLabelDescription = gtk_label_new(NULL);
+    pLabelCommentary = gtk_label_new(NULL);
     sUtf8 = g_locale_from_utf8("<span size=\"15\">Un commentaire ?</span>",-1, NULL,NULL, NULL);     //-1 permet de laisser la lib calculer la longueur de la chaine
-    gtk_label_set_markup(GTK_LABEL(pLabelDescription), sUtf8);
+    gtk_label_set_markup(GTK_LABEL(pLabelCommentary), sUtf8);
     g_free(sUtf8);
-    gtk_label_set_justify(GTK_LABEL(pLabelDescription), GTK_JUSTIFY_CENTER);
+    gtk_label_set_justify(GTK_LABEL(pLabelCommentary), GTK_JUSTIFY_CENTER);
 
 
-    gtk_table_attach(GTK_TABLE(pTable), pLabelOrdersC, 0, 2, 0, 1,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
-    gtk_table_attach(GTK_TABLE(pTable), pLabelDescription, 0, 2, 2, 3,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
+    /* Creation du GtkEntry */
+    text_view=gtk_text_view_new();
 
+
+
+    gtk_table_attach(GTK_TABLE(pTable), pLabelRecapitulatif, 0, 2, 0, 1,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
+    gtk_table_attach(GTK_TABLE(pTable), pLabelCommentary, 0, 2, 2, 3,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
+    gtk_table_attach(GTK_TABLE(pTable), text_view, 0, 2, 3, 4,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
 
     /* Connexion du signal "destroy" */
     g_signal_connect(G_OBJECT(pWindow), "destroy", G_CALLBACK(OnDestroy), NULL);
 
 
     //Permet d'afficher toute les infos sur la fenetre
-    gtk_container_add(GTK_CONTAINER(pWindow), pLabelOrdersC);
-    gtk_container_add(GTK_CONTAINER(pWindow), pLabelDescription);
+    gtk_container_add(GTK_CONTAINER(pWindow), pLabelRecapitulatif);
+    gtk_container_add(GTK_CONTAINER(pWindow), pLabelCommentary);
 
 
 
