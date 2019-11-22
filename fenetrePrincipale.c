@@ -1,3 +1,0 @@
-void test(){
- printf("salut");
-}
