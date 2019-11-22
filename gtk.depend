@@ -2255,18 +2255,21 @@
 	<stdlib.h>
 	<gtk/gtk.h>
 
-1574425210 source:c:\users\samysab\desktop\orders-c\main.c
+1574427015 source:c:\users\samysab\desktop\orders-c\main.c
 	<stdlib.h>
 	<gtk/gtk.h>
 	"menuWindow.c"
 	"launchWindow.c"
 	"orderSummary.c"
+	"adminLogIn.c"
 
 1574422107 c:\users\samysab\desktop\orders-c\fenetreprincipale.c
 
 1574425263 c:\users\samysab\desktop\orders-c\menuwindow.c
 
-1574424820 c:\users\samysab\desktop\orders-c\launchwindow.c
+1574427159 c:\users\samysab\desktop\orders-c\launchwindow.c
 
 1574425793 c:\users\samysab\desktop\orders-c\ordersummary.c
+
+1574426961 c:\users\samysab\desktop\orders-c\adminlogin.c
 

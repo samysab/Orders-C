@@ -1,3 +1,4 @@
+void adminLoginWindow(GtkWidget *widget);
 
 void firstWindow(GtkWidget *widget){
 
@@ -50,6 +51,7 @@ void firstWindow(GtkWidget *widget){
     //permet d'ouvrir une anouvelle fenetre
     g_signal_connect(G_OBJECT(pButton[0]),"clicked",G_CALLBACK(Windowscommande),NULL);
     g_signal_connect(G_OBJECT(pButton[1]),"clicked",G_CALLBACK(Windowscommande),NULL);
+    g_signal_connect(G_OBJECT(pButton[2]),"clicked",G_CALLBACK(adminLoginWindow),NULL);
 
     /* Connexion du signal "destroy" */
     g_signal_connect(G_OBJECT(pWindow), "destroy", G_CALLBACK(OnDestroy), NULL);
