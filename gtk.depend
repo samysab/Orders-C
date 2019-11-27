@@ -2279,11 +2279,33 @@
 
 1574426961 c:\users\samysab\desktop\orders-c\adminlogin.c
 
+<<<<<<< HEAD
 1574859520 c:\users\samy\desktop\orders-c\menuwindow.c
+=======
+1574864205 c:\users\samy\desktop\orders-c\menuwindow.c
+>>>>>>> features/fetch_products
 
 1574856832 c:\users\samy\desktop\orders-c\launchwindow.c
 
 1574856832 c:\users\samy\desktop\orders-c\ordersummary.c
 
 1574856832 c:\users\samy\desktop\orders-c\adminlogin.c
+
+1574861206 source:c:\users\narlucla\documents\cours\2a\_projets\projet_c\orders-c\main.c
+	<stdlib.h>
+	<gtk/gtk.h>
+	<winsock.h>
+	<MYSQL/mysql.h>
+	"menuWindow.c"
+	"launchWindow.c"
+	"orderSummary.c"
+	"adminLogIn.c"
+
+1574861657 c:\users\narlucla\documents\cours\2a\_projets\projet_c\orders-c\menuwindow.c
+
+1574861099 c:\users\narlucla\documents\cours\2a\_projets\projet_c\orders-c\launchwindow.c
+
+1574861099 c:\users\narlucla\documents\cours\2a\_projets\projet_c\orders-c\ordersummary.c
+
+1574861099 c:\users\narlucla\documents\cours\2a\_projets\projet_c\orders-c\adminlogin.c
 

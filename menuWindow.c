@@ -57,6 +57,69 @@ void Windowscommande(GtkWidget *widget){
     gtk_table_attach(GTK_TABLE(pTable), pLabelOrders, 0, 1, 5, 6,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
     gtk_table_attach(GTK_TABLE(pTable), pButton[4], 5, 6, 6, 7, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
 
+
+
+
+    // box
+    gchar* stringUtf8;
+
+    GtkWidget* productsHbox;
+    productsHbox = gtk_hbox_new(FALSE, 10);
+
+    gtk_table_attach(GTK_TABLE(pTable), productsHbox, 2, 6, 1, 5, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
+        gtk_container_add(GTK_CONTAINER(pWindow), productsHbox);
+
+    MYSQL mysql;
+    mysql_init(&mysql);
+    mysql_options(&mysql, MYSQL_READ_DEFAULT_GROUP, "option");
+
+    if (mysql_real_connect(&mysql, "localhost", "root", "", "burgerc_db", 0, NULL, 0)) {
+
+        mysql_query(&mysql, "SELECT productName FROM products");
+
+        MYSQL_RES *result = NULL;
+        MYSQL_ROW row;
+
+        unsigned int num_champs = 0;
+
+        result = mysql_use_result(&mysql);
+
+        num_champs = mysql_num_fields(result);
+                int iColStart = 2;
+                int iColEnd = 3;
+                int j = 1;
+                int k = 2;
+        GtkWidget* burger_button;
+        while ((row = mysql_fetch_row(result))) {
+            for (int i = 0; i < num_champs; i++) {
+
+                stringUtf8 = g_locale_to_utf8(row[i], -1, NULL, NULL, NULL);
+                burger_button = gtk_button_new_with_label(stringUtf8);
+                //gtk_box_pack_start(GTK_BOX(productsHbox), burger_button, FALSE, FALSE, 0);
+                gtk_table_attach(GTK_TABLE(pTable), burger_button, iColStart, iColEnd, j, k, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
+
+                iColEnd +=1;
+                iColStart +=1;
+
+                if(iColEnd == 6){
+                    iColStart = 2;
+                    iColEnd = 3;
+                    j ++;
+                    k ++;
+                }
+            }
+
+        }
+        mysql_close(&mysql);
+    } else {
+        printf("Erreur bdd");
+    }
+
+
+
+
+
+
     g_signal_connect(G_OBJECT(pButton[4]),"clicked",G_CALLBACK(orderWindow),NULL);
 
     /* Connexion du signal "destroy" */
