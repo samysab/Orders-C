@@ -1,0 +1,4 @@
+bin/*
+obj/*
+gtk.depend
+gtk.layout

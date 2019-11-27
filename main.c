@@ -7,15 +7,15 @@
 #include "orderSummary.c"
 #include "adminLogIn.c"
 
-void firstWindow(GtkWidget *widget);
-void Windowscommande(GtkWidget *widget);
-void orderWindow(GtkWidget *widget);
-void adminLoginWindow(GtkWidget *widget);
+void firstWindow();
+void Windowscommande();
+void orderWindow();
+void adminLoginWindow();
 
 int main(int argc,char **argv)
 {
     gtk_init(&argc,&argv);
 
-    Windowscommande(GTK_WINDOW_TOPLEVEL);
+    adminLoginWindow();
     return EXIT_SUCCESS;
 }
