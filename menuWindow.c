@@ -57,6 +57,62 @@ void Windowscommande(GtkWidget *widget){
     gtk_table_attach(GTK_TABLE(pTable), pLabelOrders, 0, 1, 5, 6,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
     gtk_table_attach(GTK_TABLE(pTable), pButton[4], 5, 6, 6, 7, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
 
+
+
+
+    // box
+    gchar* stringUtf8;
+
+    GtkWidget* productsHbox;
+    productsHbox = gtk_hbox_new(FALSE, 10);
+    gtk_table_attach(GTK_TABLE(pTable), productsHbox, 1, 7, 1, 6, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
+
+    MYSQL mysql;
+    mysql_init(&mysql);
+    mysql_options(&mysql, MYSQL_READ_DEFAULT_GROUP, "option");
+
+    if (mysql_real_connect(&mysql, "localhost", "root", "", "burgersC_1", 0, NULL, 0)) {
+
+        mysql_query(&mysql, "SELECT name FROM products");
+
+        MYSQL_RES *result = NULL;
+        MYSQL_ROW row;
+
+        unsigned int i = 0;
+        unsigned int num_champs = 0;
+
+        result = mysql_use_result(&mysql);
+
+        num_champs = mysql_num_fields(result);
+
+        GtkWidget* burger_button;
+        while ((row = mysql_fetch_row(result))) {
+            unsigned long *lengths;
+            lengths = mysql_fetch_lengths(result);
+            for (int i = 0; i < num_champs; i++) {
+                stringUtf8 = g_locale_to_utf8(row[i], -1, NULL, NULL, NULL);
+                burger_button = gtk_button_new_with_label(stringUtf8);
+                gtk_box_pack_start(GTK_BOX(productsHbox), burger_button, FALSE, FALSE, 0);
+            }
+
+        }
+        mysql_close(&mysql);
+    } else {
+        printf("Erreur bdd");
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     g_signal_connect(G_OBJECT(pButton[4]),"clicked",G_CALLBACK(orderWindow),NULL);
 
     /* Connexion du signal "destroy" */
