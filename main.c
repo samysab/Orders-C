@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
+#include <winsock.h>
+#include <MYSQL/mysql.h>
 #include "menuWindow.c"
 #include "launchWindow.c"
 #include "orderSummary.c"
@@ -14,6 +16,6 @@ int main(int argc,char **argv)
 {
     gtk_init(&argc,&argv);
 
-    firstWindow(GTK_WINDOW_TOPLEVEL);
+    Windowscommande(GTK_WINDOW_TOPLEVEL);
     return EXIT_SUCCESS;
 }
