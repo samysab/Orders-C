@@ -16,6 +16,6 @@ int main(int argc,char **argv)
 {
     gtk_init(&argc,&argv);
 
-    adminLoginWindow();
+    Windowscommande();
     return EXIT_SUCCESS;
 }

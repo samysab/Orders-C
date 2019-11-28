@@ -40,7 +40,7 @@ void adminLoginWindow(){
 
 	// Création du label
 	pLabelLogin = gtk_label_new(NULL);
-	sUtf8 = g_locale_from_utf8("<span size=\"15\">login</span>",-1, NULL,NULL, NULL);     //-1 permet de laisser la lib calculer la longueur de la chaine
+	sUtf8 = g_locale_from_utf8("<span size=\"15\">Login</span>",-1, NULL,NULL, NULL);     //-1 permet de laisser la lib calculer la longueur de la chaine
 	gtk_label_set_markup(GTK_LABEL(pLabelLogin), sUtf8);
 	g_free(sUtf8);
 	gtk_label_set_justify(GTK_LABEL(pLabelLogin), GTK_JUSTIFY_CENTER);
@@ -96,6 +96,7 @@ void adminLoginWindow(){
 	gtk_main();
 
 }
+
 
 void login_connect(GtkWidget* button_clicked, GtkWidget** credsArray) {
 
