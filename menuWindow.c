@@ -22,9 +22,9 @@ void Windowscommande(){
 	gtk_window_set_position(GTK_WINDOW(pWindow), GTK_WIN_POS_CENTER);
 
 	pTable = gtk_table_new(7, 5, TRUE);
-	// gtk_table_set_col_spacings(pTable, 20);
-	// gtk_table_set_col_spacing(GTK_TABLE(pTable), 2, 100);
+	// marge entre les menus et les produits
 	gtk_table_set_col_spacing(GTK_TABLE(pTable), 0, 50);
+	// marge entre les produits et le bouton Valider la commande ?
 
 	// Création du label Titre
 	pLabelOrdersC = gtk_label_new(NULL);
