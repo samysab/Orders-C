@@ -15,9 +15,6 @@ void Windowscommande(){
 	// Création de la fenêtre 
 	pWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
-	// Creation du container root
-	// rootBox = gtk_hbox_new(TRUE, 0);
-	
 	// Ajouter un titre à la fenetre
 	gtk_window_set_title(GTK_WINDOW(pWindow), "MENU - Burger C");
 	
@@ -26,6 +23,7 @@ void Windowscommande(){
 	gtk_window_set_position(GTK_WINDOW(pWindow), GTK_WIN_POS_CENTER);
 
 	pTable = gtk_table_new(7,6,TRUE);
+	gtk_table_set_col_spacings(pTable, 20);
 
 	// Création du label Titre
 	pLabelOrdersC = gtk_label_new(NULL);
@@ -39,7 +37,6 @@ void Windowscommande(){
 	sUtf8 = g_locale_from_utf8("<b><u><span font_family=\"Courier New\">Panier :</span></u></b>",-1, NULL,NULL, NULL); //-1 permet de laisser la lib calculer la longueur de la chaine
 	gtk_label_set_markup(GTK_LABEL(pLabelOrders), sUtf8);
 	gtk_label_set_justify(GTK_LABEL(pLabelOrders), GTK_JUSTIFY_CENTER);
-
 
 
 	pButton[0] = gtk_button_new_with_label("Menus");
@@ -59,16 +56,6 @@ void Windowscommande(){
 
 
 
-
-	// box
-
-
-	// GtkWidget* productsHbox;
-	// productsHbox = gtk_hbox_new(FALSE, 10);
-
-	// gtk_table_attach(GTK_TABLE(pTable), productsHbox, 2, 6, 1, 5, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
-
-
 	MYSQL mysql;
 	mysql_init(&mysql);
 	mysql_options(&mysql, MYSQL_READ_DEFAULT_GROUP, "option");
@@ -86,45 +73,71 @@ void Windowscommande(){
 		result = mysql_use_result(&mysql);
 
 		num_champs = mysql_num_fields(result);
-		int iColStart = 2;
-		int iColEnd = 3;
-		int j = 1;
-		int k = 2;
+
 		GtkWidget* burger_box;
 		GtkWidget* burger_image;
 		GtkWidget* burger_button;
-		GtkWidget* scrollbar;
-		scrollbar = gtk_scrolled_window_new(NULL, NULL);
 		
+
+		GtkWidget* productsBox;
+
+
+		// Le 4 correspond au nombre de lignes,
+		// il devrait etre calculé en fonction du nombre de produits qu'on a
+		// nb_produits / 3
+		// euh quand si on met un nombre inferieur au nombre correct de lignes
+		// ca marche quand meme, hmm
+		productsBox = gtk_table_new(1, 3, TRUE);
+		gtk_table_set_row_spacings(productsBox, 10);
+		int row_start = 0;
+		int row_end = 1;
+		int col_start = 0;
+		int	col_end = 1;
+
+
+
+		GtkWidget* scrolledWindow;
+		scrolledWindow = gtk_scrolled_window_new(NULL, NULL);
+		gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolledWindow), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
+
 		while ((row = mysql_fetch_row(result))) {
 			for (int i = 0; i < num_champs; i++) {
+				// burger box contient l'image du burger ainsi que son bouton heponyme
 				burger_box = gtk_vbox_new(FALSE, 5);
 
 				burger_image = gtk_image_new_from_file("./burger.png");
+
 				sUtf8 = g_locale_to_utf8(row[i], -1, NULL, NULL, NULL);
 				burger_button = gtk_button_new_with_label(sUtf8);
 
 				gtk_box_pack_start(GTK_BOX(burger_box), burger_image, FALSE, FALSE, 0);
 				gtk_box_pack_start(GTK_BOX(burger_box), burger_button, FALSE, FALSE, 0);
 
-				gtk_table_attach(GTK_TABLE(pTable), burger_box, iColStart, iColEnd, j, k, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
+				gtk_table_attach(GTK_TABLE(productsBox), burger_box, row_start, row_end, col_start, col_end, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+				row_start += 1;
+				row_end += 1;
+
+				if (row_start == 3) {
+					row_start = 0;
+					row_end = 1;
+
+					col_start += 1;
+					col_end = col_start + 1;
+				}
+
 				// comme on utilise la meme variable pour tous les burgers,
 				// il faut la vider pour lui donner une nouvelle identite
 				// sans le free ca marche mais on a des erreurs gtk_table_assertion_failed
 				free(burger_box);
 
-				iColEnd += 1;
-				iColStart += 1;
-
-				if (iColEnd == 6) {
-					iColStart = 2;
-					iColEnd = 3;
-					j++;
-					k++;
-				}
 			}
-
 		}
+
+		// on ajoute burger box a la box de tous les produits
+		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolledWindow), productsBox);
+
+		gtk_table_attach(GTK_TABLE(pTable), scrolledWindow, 2, 5, 1, 5, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
+
 		mysql_close(&mysql);
 	} else {
 		printf("Erreur bdd");
