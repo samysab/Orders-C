@@ -1,4 +1,5 @@
 void OnDestroy(GtkWidget *pWidget, gpointer pData);
+void addPanier(GtkWidget *pWidget);
 void orderWindow();
 
 void Windowscommande(){
@@ -21,7 +22,7 @@ void Windowscommande(){
 	gtk_window_set_default_size(GTK_WINDOW(pWindow),500, 700);
 	gtk_window_set_position(GTK_WINDOW(pWindow), GTK_WIN_POS_CENTER);
 
-	pTable = gtk_table_new(7, 5, TRUE);
+	pTable = gtk_table_new(7, 6, TRUE);
 	// marge entre les menus et les produits
 	gtk_table_set_col_spacing(GTK_TABLE(pTable), 0, 50);
 	// marge entre les produits et le bouton Valider la commande ?
@@ -50,13 +51,13 @@ void Windowscommande(){
 	pButton[4] = gtk_button_new_with_label("Valider la commande");
 
 
-	gtk_table_attach(GTK_TABLE(pTable), pLabelOrdersC, 0, 2, 0, 1,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
+	gtk_table_attach(GTK_TABLE(pTable), pLabelOrdersC, 1, 2, 0, 1,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
 	gtk_table_attach(GTK_TABLE(pTable), pButton[0], 0, 1, 1, 2, GTK_EXPAND | GTK_FILL , GTK_EXPAND | GTK_FILL, 0,0);
 	gtk_table_attach(GTK_TABLE(pTable), pButton[1], 0, 1, 2, 3, GTK_EXPAND | GTK_FILL , GTK_EXPAND | GTK_FILL, 0,0);
 	gtk_table_attach(GTK_TABLE(pTable), pButton[2], 0, 1, 3, 4, GTK_EXPAND | GTK_FILL , GTK_EXPAND | GTK_FILL, 0,0);
 	gtk_table_attach(GTK_TABLE(pTable), pButton[3], 0, 1, 4, 5, GTK_EXPAND | GTK_FILL , GTK_EXPAND | GTK_FILL, 0,0);
 	gtk_table_attach(GTK_TABLE(pTable), pLabelOrders, 0, 1, 5, 6,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
-	gtk_table_attach(GTK_TABLE(pTable), pButton[4], 4, 5, 6, 7, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
+	gtk_table_attach(GTK_TABLE(pTable), pButton[4], 5, 6, 6, 7, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
 
 
 
@@ -67,7 +68,7 @@ void Windowscommande(){
 	
 	if (mysql_real_connect(&mysql, "localhost", "root", "", "burgerc_db", 0, NULL, 0)) {
 
-		mysql_query(&mysql, "SELECT productName FROM products");
+		mysql_query(&mysql, "SELECT productId, productName, productImg FROM products");
 
 		MYSQL_RES *result = NULL;
 		MYSQL_ROW row;
@@ -89,10 +90,12 @@ void Windowscommande(){
 		// Le 4 correspond au nombre de lignes,
 		// il devrait etre calculé en fonction du nombre de produits qu'on a
 		// nb_produits / 3
-		// euh quand si on met un nombre inferieur au nombre correct de lignes
+		// euh  si on met un nombre inferieur au nombre correct de lignes
 		// ca marche quand meme, hmm
-		productsTable = gtk_table_new(1, 3, TRUE);
-		gtk_table_set_row_spacings(GTK_TABLE(productsTable), 10);
+		productsTable = gtk_table_new(1, 4, TRUE);
+		// les marges entre less lignes et colonnes
+		gtk_table_set_row_spacings(GTK_TABLE(productsTable), 20);
+		gtk_table_set_col_spacings(GTK_TABLE(productsTable), 20);
 		int row_start = 0;
 		int row_end = 1;
 		int col_start = 0;
@@ -105,14 +108,25 @@ void Windowscommande(){
 		gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolledWindow), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
 
 		while ((row = mysql_fetch_row(result))) {
-			for (int i = 0; i < num_champs; i++) {
+			/*
+			* les index (genre row[0], row[1]...) sont dans l'ordre dans lequel on a fait le SELECT !!!
+			*
+			*/
+
+			// for (int i = 0; i < num_champs; i++) {
+
 				// burger box contient l'image du burger ainsi que son bouton heponyme
-				burger_box = gtk_vbox_new(FALSE, 5);
+				burger_box = gtk_vbox_new(FALSE, 10);
 
-				burger_image = gtk_image_new_from_file("./burger.png");
+				burger_image = gtk_image_new_from_file(row[2]);
 
-				sUtf8 = g_locale_to_utf8(row[i], -1, NULL, NULL, NULL);
+				sUtf8 = g_locale_to_utf8(row[1], -1, NULL, NULL, NULL);
 				burger_button = gtk_button_new_with_label(sUtf8);
+
+			
+				// on ajoute la fonction d'ajout au panier sur le bouton
+				g_signal_connect(G_OBJECT(burger_button), "clicked", G_CALLBACK(addPanier), NULL);
+
 
 				gtk_box_pack_start(GTK_BOX(burger_box), burger_image, FALSE, FALSE, 0);
 				gtk_box_pack_start(GTK_BOX(burger_box), burger_button, FALSE, FALSE, 0);
@@ -121,7 +135,7 @@ void Windowscommande(){
 				row_start += 1;
 				row_end += 1;
 
-				if (row_start == 3) {
+				if (row_start == 4) {
 					row_start = 0;
 					row_end = 1;
 
@@ -133,14 +147,13 @@ void Windowscommande(){
 				// il faut la vider pour lui donner une nouvelle identite
 				// sans le free ca marche mais on a des erreurs gtk_table_assertion_failed
 				free(burger_box);
-
-			}
+			// }
 		}
 
 		// on ajoute burger box a la box de tous les produits
 		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolledWindow), productsTable);
 
-		gtk_table_attach(GTK_TABLE(pTable), scrolledWindow, 1, 4, 1, 5, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
+		gtk_table_attach(GTK_TABLE(pTable), scrolledWindow, 1, 6, 1, 5, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
 
 		mysql_close(&mysql);
 	} else {
@@ -176,4 +189,9 @@ void Windowscommande(){
 void OnDestroy(GtkWidget *pWidget, gpointer pData) {
 	// Arret de la boucle evenementielle 
 	gtk_main_quit();
+}
+
+
+void addPanier(GtkWidget *btn) {
+	printf("J'ajoute : %s\n", gtk_button_get_label(GTK_BUTTON(btn)));
 }
