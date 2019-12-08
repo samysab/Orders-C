@@ -58,10 +58,10 @@ void Windowscommande(){
 
 	gtk_table_attach(GTK_TABLE(pTable), pLabelOrdersC, 1, 2, 0, 1,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
 	// gtk_table_attach(GTK_TABLE(pTable), category_box, 0, 1, 1, 5, GTK_EXPAND | GTK_FILL , GTK_EXPAND | GTK_FILL, 0,0);
-	gtk_table_attach(GTK_TABLE(pTable), pButton[0], 0, 1, 1, 2, GTK_EXPAND | GTK_FILL , GTK_EXPAND | GTK_FILL, 0,0);
-	gtk_table_attach(GTK_TABLE(pTable), pButton[1], 0, 1, 2, 3, GTK_EXPAND | GTK_FILL , GTK_EXPAND | GTK_FILL, 0,0);
-	gtk_table_attach(GTK_TABLE(pTable), pButton[2], 0, 1, 3, 4, GTK_EXPAND | GTK_FILL , GTK_EXPAND | GTK_FILL, 0,0);
-	gtk_table_attach(GTK_TABLE(pTable), pButton[3], 0, 1, 4, 5, GTK_EXPAND | GTK_FILL , GTK_EXPAND | GTK_FILL, 0,0);
+	// gtk_table_attach(GTK_TABLE(pTable), pButton[0], 0, 1, 1, 2, GTK_EXPAND | GTK_FILL , GTK_EXPAND | GTK_FILL, 0,0);
+	// gtk_table_attach(GTK_TABLE(pTable), pButton[1], 0, 1, 2, 3, GTK_EXPAND | GTK_FILL , GTK_EXPAND | GTK_FILL, 0,0);
+	// gtk_table_attach(GTK_TABLE(pTable), pButton[2], 0, 1, 3, 4, GTK_EXPAND | GTK_FILL , GTK_EXPAND | GTK_FILL, 0,0);
+	// gtk_table_attach(GTK_TABLE(pTable), pButton[3], 0, 1, 4, 5, GTK_EXPAND | GTK_FILL , GTK_EXPAND | GTK_FILL, 0,0);
 	gtk_table_attach(GTK_TABLE(pTable), pLabelOrders, 0, 1, 5, 6,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
 	gtk_table_attach(GTK_TABLE(pTable), pButton[4], 5, 6, 6, 7, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
 
@@ -111,9 +111,10 @@ void Windowscommande(){
 
 			fullTypesArraySize += 1;
 
-			printf("Voici fullTypes : \n");
-			for (int i = 0; i < fullTypesArraySize; i++)
-				printf("	%s\n", fullTypesArray[i]);
+			// ### A DECOMMENTER POUR COMPRENDRE 
+			// printf("Voici fullTypes : \n");
+			// for (int i = 0; i < fullTypesArraySize; i++)
+			// 	printf("	%s\n", fullTypesArray[i]);
 		}
 
 		free(inter);
@@ -123,17 +124,21 @@ void Windowscommande(){
 		for (i = 0; i < fullTypesArraySize; i++) {
 			for (j = i+1; j < fullTypesArraySize; j++) {
 				if (!strcmp(fullTypesArray[i], fullTypesArray[j])) {
-					printf("doublon : %s == %s\n", fullTypesArray[i], fullTypesArray[j]);
+					// ### A DECOMMENTER POUR COMPRENDRE 
+					// printf("doublon : %s == %s\n", fullTypesArray[i], fullTypesArray[j]);
 					strcpy(fullTypesArray[j], "");
-				} else {
-					printf("differents : %s <> %s\n", fullTypesArray[i], fullTypesArray[j]);
 				}
+				// } else {
+					// ### A DECOMMENTER POUR COMPRENDRE 
+					// printf("differents : %s <> %s\n", fullTypesArray[i], fullTypesArray[j]);
+				// }
 			}
 		}
 
-		printf("\nTrie fullTypes : \n");
-		for (i = 0; i < fullTypesArraySize; i++)
-			printf("	%s\n", fullTypesArray[i]);
+		// ### A DECOMMENTER POUR COMPRENDRE 
+		// printf("\nTrie fullTypes : \n");
+		// for (i = 0; i < fullTypesArraySize; i++)
+		// 	printf("	%s\n", fullTypesArray[i]);
 
 		int typesSize = 1;
 		char** types = malloc(sizeof(char*) * typesSize);
@@ -166,16 +171,53 @@ void Windowscommande(){
 			}
 		}
 
-		printf("On a %d types\n", typesCounter);
-		printf("types : \n");
-		for (i = 0; i < typesSize; i++)
-			printf("	%s\n", types[i]);
+		// ### A DECOMMENTER POUR COMPRENDRE 
+		// printf("On a %d types\n", typesCounter);
+		// printf("types : ");
+		// for (i = 0; i < typesSize; i++)
+		// 	printf("	%s\n", types[i]);
 
+
+		// maintenant on ajoute ces types dans la barre a gauche
+		GtkWidget* vboxTypes = gtk_vbox_new(TRUE, 0);
+		GtkWidget* typeButton;
+		GtkWidget* scrolledWindowTypes;
+		scrolledWindowTypes = gtk_scrolled_window_new(NULL, NULL);
+		gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolledWindowTypes), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
+
+		for (i = 1; i < typesSize; i++) {
+			sUtf8 = g_locale_from_utf8(types[i] ,-1, NULL,NULL, NULL);
+			typeButton = gtk_button_new_with_label(sUtf8);
+			gtk_box_pack_start(GTK_BOX(vboxTypes), typeButton, TRUE, TRUE, 0);
+
+			free(typeButton);
+		}
+
+		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolledWindowTypes), vboxTypes);
+
+		gtk_table_attach(GTK_TABLE(pTable), scrolledWindowTypes, 0, 1, 1, 5, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
+
+
+
+
+
+		for (i = 0; i < fullTypesArraySize; i++)
+			free(fullTypesArray[i]);
+		
+		for (i = 0; i < typesSize; i++)
+			free(inter[i]);
+		
+		for (i = 0; i < typesSize; i++)
+			free(types[i]);
 
 		free(fullTypesArray);
+		free(inter);
+		free(types);
+
 
 		mysql_free_result(result);
 
+		// on passe a la deuxieme requete (les produits)
 
 
 
