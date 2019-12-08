@@ -65,14 +65,6 @@ void Windowscommande(){
 	gtk_table_attach(GTK_TABLE(pTable), pLabelOrders, 0, 1, 5, 6,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
 	gtk_table_attach(GTK_TABLE(pTable), pButton[4], 5, 6, 6, 7, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
 
-	// on cree le tableau dynamique qui va contenir les types en unique
-	char** fullTypesArray;
-	char** inter;
-	int fullTypesArraySize;
-	fullTypesArraySize;
-	fullTypesArraySize = 1;
-	fullTypesArray = malloc(sizeof(char*) * fullTypesArraySize);
-
 
 	MYSQL mysql;
 	mysql_init(&mysql);
@@ -80,101 +72,107 @@ void Windowscommande(){
 	
 	
 	if (mysql_real_connect(&mysql, "localhost", "root", "", "burgerc_db", 0, NULL, 0)) {
-		int i, r;
+		int i, j;
+	
+		// on cree le tableau dynamique qui va contenir les types en unique
+		char** fullTypesArray;
+		char** inter;
+		int fullTypesArraySize = 1;
+		fullTypesArray = malloc(sizeof(char*) * fullTypesArraySize);
 
 		mysql_query(&mysql, "SELECT productType FROM products");
 
 		MYSQL_RES *result = NULL;
-		MYSQL_ROW row;
 		MYSQL_ROW firstRow;
+		MYSQL_ROW row;
 
 		unsigned int num_champs = 0;
 		result = mysql_use_result(&mysql);
 		num_champs = mysql_num_fields(result);
 
-		// on initialise le premier element du tableau pour que le programme puisse faire une comparaison
 		firstRow = mysql_fetch_row(result);
-		// j'alloue le premier élément 
 		fullTypesArray[0] = malloc(sizeof(char) * 255);
 		strcpy(fullTypesArray[0], firstRow[0]);
-		printf("1st : %s\n\n", fullTypesArray[0]);
 
 		while ((row = mysql_fetch_row(result))) {
 
-			printf("\n# ON PASSE A %s\n", row[0]);
-
-			// for (r = 0; r < fullTypesArraySize; r++) {
-			// 	printf("comparaison %s == %s > %s\n", row[0], fullTypesArray[r], (strcmp(row[0], fullTypesArray[r]) ? "different" : "pareil"));
-
-				// if (strcmp(row[0], fullTypesArray[r])) {
-
-			for (r = 0; r < fullTypesArraySize; r++) {
-				printf("\n# On Compare %s et %s\n", row[0], fullTypesArray[r]);
-
-				// strcmp == 0 EQUIVAUT A !strcmp 
-				// je verifie que cette valeur n'est pas en double
-
-				// si y'a un doublon je passe au prochain element du tableau
-				if (!strcmp(row[0], fullTypesArray[r])) {
-					printf("Doublon : %s == %s\n", row[0], fullTypesArray[r]);
-					printf("..%d\n", fullTypesArraySize);
-					break;
-				}
-
-				if (strcmp(row[0], fullTypesArray[r])) {
-					printf("!!!%d\n", fullTypesArraySize);
-
-					printf("j'analyse...\n");
-					for (int i = 0; i < fullTypesArraySize; i++)
-						printf("	%s\n", fullTypesArray[i]);
-
-					printf("Different : %s <> %s\n", row[0], fullTypesArray[r]);
-					
-					// fullTypes to inter
-					inter = malloc(sizeof(char*) * (fullTypesArraySize + 1));
-					for (int i = 0; i < fullTypesArraySize; i++) {
-						inter[i] = malloc(sizeof(char) * 255);
-						strcpy(inter[i], fullTypesArray[i]);
-					}
-	
-					inter[fullTypesArraySize] = malloc(sizeof(char) * 255);
-					strcpy(inter[fullTypesArraySize], row[0]);
-
-					free(fullTypesArray);
-					fullTypesArray = inter;
-					fullTypesArraySize += 1;
-					break;
-
-				}
-
-
-
-
-	
+			inter = malloc(sizeof(char*) * (fullTypesArraySize + 1));
+			for (int i = 0; i < fullTypesArraySize; i++) {
+				inter[i] = malloc(sizeof(char) * 255);
+				strcpy(inter[i], fullTypesArray[i]);
 			}
 
+			inter[fullTypesArraySize] = malloc(sizeof(char) * 255);
+			strcpy(inter[fullTypesArraySize], row[0]);
 
-			printf("Voici fullTypes 1: \n");
+			free(fullTypesArray);
+
+			fullTypesArray = inter;
+
+			fullTypesArraySize += 1;
+
+			printf("Voici fullTypes : \n");
 			for (int i = 0; i < fullTypesArraySize; i++)
 				printf("	%s\n", fullTypesArray[i]);
-
-
-
-				// // add extra value
-				// printf("Voici fullTypes 2: \n");
-				// for (int i = 0; i < fullTypesArraySize; i++)
-				// 	printf("%s\n", fullTypesArray[i]);
-
-			printf("\nautre tour\n");
-
-
-
-
 		}
 
-		free(fullTypesArray);
+		free(inter);
 
-		printf("final : %d\n", fullTypesArraySize);
+		// on a un tableau dynamique qui contient tous les types
+		// on doit supprimer les doublons
+		for (i = 0; i < fullTypesArraySize; i++) {
+			for (j = i+1; j < fullTypesArraySize; j++) {
+				if (!strcmp(fullTypesArray[i], fullTypesArray[j])) {
+					printf("doublon : %s == %s\n", fullTypesArray[i], fullTypesArray[j]);
+					strcpy(fullTypesArray[j], "");
+				} else {
+					printf("differents : %s <> %s\n", fullTypesArray[i], fullTypesArray[j]);
+				}
+			}
+		}
+
+		printf("\nTrie fullTypes : \n");
+		for (i = 0; i < fullTypesArraySize; i++)
+			printf("	%s\n", fullTypesArray[i]);
+
+		int typesSize = 1;
+		char** types = malloc(sizeof(char*) * typesSize);
+		types[0] = malloc(sizeof(char) * 255);
+		strcpy(types[0], "");
+
+		// on cherche a savoir cb de types on a finalement
+		int typesCounter = 0;
+		for (i = 0; i < fullTypesArraySize; i++) {
+			// si on trouve une case du tableau qui est differente de "" (strcmp renvoie un nb different de 0 si c different)
+			if (strcmp(fullTypesArray[i], "")) {
+				typesCounter++;
+
+				inter = malloc(sizeof(char*) * typesSize + 1);
+				// on copie types dans inter 
+				for (j = 0; j < typesSize; j++) {
+					inter[j] = malloc(sizeof(char) * 255);
+					strcpy(inter[j], types[j]);
+				}
+
+				inter[typesSize] = malloc(sizeof(char) * 255);
+				strcpy(inter[j], fullTypesArray[i]);
+
+				free(types);
+
+				types = inter;
+
+				typesSize++;
+			
+			}
+		}
+
+		printf("On a %d types\n", typesCounter);
+		printf("types : \n");
+		for (i = 0; i < typesSize; i++)
+			printf("	%s\n", types[i]);
+
+
+		free(fullTypesArray);
 
 		mysql_free_result(result);
 
