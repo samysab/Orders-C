@@ -94,15 +94,11 @@ void Windowscommande(){
 
 		mysql_query(&mysql, "SELECT productId, productName, productImg FROM products");
 
-		unsigned int num_champs = 0;
-
 		MYSQL_RES *result = NULL;
 		MYSQL_ROW row;
 
 
 		result = mysql_use_result(&mysql);
-
-		num_champs = mysql_num_fields(result);
 
 		GtkWidget* burger_box;
 		GtkWidget* burger_image;
@@ -139,41 +135,38 @@ void Windowscommande(){
 			*
 			*/
 
-			// for (int i = 0; i < num_champs; i++) {
 
-				// burger box contient l'image du burger ainsi que son bouton heponyme
-				burger_box = gtk_vbox_new(FALSE, 10);
+			// burger box contient l'image du burger ainsi que son bouton heponyme
+			burger_box = gtk_vbox_new(FALSE, 10);
 
-				burger_image = gtk_image_new_from_file(row[2]);
+			burger_image = gtk_image_new_from_file(row[2]);
 
-				sUtf8 = g_locale_to_utf8(row[1], -1, NULL, NULL, NULL);
-				burger_button = gtk_button_new_with_label(sUtf8);
+			sUtf8 = g_locale_to_utf8(row[1], -1, NULL, NULL, NULL);
+			burger_button = gtk_button_new_with_label(sUtf8);
 
 
 				// on ajoute la fonction d'ajout au panier sur le bouton
 				g_signal_connect(G_OBJECT(burger_button), "clicked", G_CALLBACK(addPanier), NULL);
 
+			gtk_box_pack_start(GTK_BOX(burger_box), burger_image, FALSE, FALSE, 0);
+			gtk_box_pack_start(GTK_BOX(burger_box), burger_button, FALSE, FALSE, 0);
 
-				gtk_box_pack_start(GTK_BOX(burger_box), burger_image, FALSE, FALSE, 0);
-				gtk_box_pack_start(GTK_BOX(burger_box), burger_button, FALSE, FALSE, 0);
+			gtk_table_attach(GTK_TABLE(productsTable), burger_box, row_start, row_end, col_start, col_end, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+			row_start += 1;
+			row_end += 1;
 
-				gtk_table_attach(GTK_TABLE(productsTable), burger_box, row_start, row_end, col_start, col_end, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
-				row_start += 1;
-				row_end += 1;
+			if (row_start == 4) {
+				row_start = 0;
+				row_end = 1;
 
-				if (row_start == 4) {
-					row_start = 0;
-					row_end = 1;
+				col_start += 1;
+				col_end = col_start + 1;
+			}
 
-					col_start += 1;
-					col_end = col_start + 1;
-				}
-
-				// comme on utilise la meme variable pour tous les burgers,
-				// il faut la vider pour lui donner une nouvelle identite
-				// sans le free ca marche mais on a des erreurs gtk_table_assertion_failed
-				free(burger_box);
-			// }
+			// comme on utilise la meme variable pour tous les burgers,
+			// il faut la vider pour lui donner une nouvelle identite
+			// sans le free ca marche mais on a des erreurs gtk_table_assertion_failed
+			free(burger_box);
 		}
 
 		// on ajoute burger box a la box de tous les produits
@@ -201,10 +194,10 @@ void Windowscommande(){
 		mysql_query(&mysql, "SELECT productType FROM products");
 
 		MYSQL_ROW firstRow;
-		num_champs = 0;
+		// num_champs = 0;
 
 		result = mysql_use_result(&mysql);
-		num_champs = mysql_num_fields(result);
+		// num_champs = mysql_num_fields(result);
 
 		firstRow = mysql_fetch_row(result);
 		fullTypesArray[0] = malloc(sizeof(char) * 255);
@@ -302,7 +295,7 @@ void Windowscommande(){
 		gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolledWindowTypes), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
 
 		// on cree le tableau qui contiendra nos widgets de reference
-		GtkWidget* widgetsTab[2];
+		void* widgetsTab[2];
 		widgetsTab[0] = pTable;
 		widgetsTab[1] = scrolledWindow;
 		widgetsTab[2] = &mysql;
@@ -393,7 +386,7 @@ void loadTypes(GtkWidget *btn, void** widgetsTab) {
 	// on supprime le tableau actuel
 	gtk_container_remove(GTK_CONTAINER(widgetsTab[0]), widgetsTab[1]);
 
-	MYSQL* conn = &widgetsTab[2];
+	MYSQL* conn = (MYSQL*)&widgetsTab[2];
 
 	if (mysql_real_connect(conn, "localhost", "root", "", "burgerc_db", 0, NULL, 0)) {
 		GtkWidget* productsTable;
@@ -402,21 +395,16 @@ void loadTypes(GtkWidget *btn, void** widgetsTab) {
 
 		// longueur de partie avant variable = 76
 		// on craft la requete avec le contenu du bouton cliqué passé en parametre de la fonction callback
-		char query[200] = "SELECT productId, productName, productImg FROM products WHERE productType = \"";
-		strcat(query, gtk_button_get_label(GTK_BUTTON(btn)));
-		strcat(query, "\"");
+		char query[200];
+		sprintf(query, "SELECT productId, productName, productImg FROM products WHERE productType = \"%s\"", gtk_button_get_label(GTK_BUTTON(btn)));
 
 		mysql_query(conn, query);
-
-		unsigned int num_champs = 0;
 
 		MYSQL_RES *result = NULL;
 		MYSQL_ROW row;
 
 
 		result = mysql_use_result(conn);
-
-		num_champs = mysql_num_fields(result);
 
 		GtkWidget* burger_box;
 		GtkWidget* burger_image;
@@ -482,8 +470,7 @@ void loadTypes(GtkWidget *btn, void** widgetsTab) {
 
 
 
-
-	// on show le nouveau tableau
+	// on affiche le nouveau tableau
 	gtk_widget_show_all(widgetsTab[1]);
 
 
