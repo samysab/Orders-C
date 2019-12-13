@@ -5,7 +5,7 @@ void orderWindow();
 
 void Windowscommande(){
 
-	// Déclaration des widget 
+	// Déclaration des widget
 	GtkWidget *pWindow;
 	GtkWidget *pLabelOrdersC;
 	GtkWidget *pLabelOrders;
@@ -13,12 +13,12 @@ void Windowscommande(){
 	GtkWidget *pButton[5];
 	GtkWidget *pTable;
 
-	// Création de la fenêtre 
+	// Création de la fenêtre
 	pWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
 	// Ajouter un titre à la fenetre
 	gtk_window_set_title(GTK_WINDOW(pWindow), "MENU - Burger C");
-	
+
 	//Initialise la taille des fenetres par défaut
 	gtk_window_set_default_size(GTK_WINDOW(pWindow),500, 700);
 	gtk_window_set_position(GTK_WINDOW(pWindow), GTK_WIN_POS_CENTER);
@@ -80,8 +80,8 @@ void Windowscommande(){
 	MYSQL mysql;
 	mysql_init(&mysql);
 	mysql_options(&mysql, MYSQL_READ_DEFAULT_GROUP, "option");
-	
-	
+
+
 	if (mysql_real_connect(&mysql, "localhost", "root", "", "burgerc_db", 0, NULL, 0)) {
 		int i, j;
 		GtkWidget* productsTable;
@@ -107,7 +107,7 @@ void Windowscommande(){
 		GtkWidget* burger_box;
 		GtkWidget* burger_image;
 		GtkWidget* burger_button;
-		
+
 
 		// Le 4 correspond au nombre de lignes,
 		// il devrait etre calculé en fonction du nombre de produits qu'on a
@@ -115,7 +115,7 @@ void Windowscommande(){
 		// euh  si on met un nombre inferieur au nombre correct de lignes
 		// ca marche quand meme, hmm
 		// les marges entre less lignes et colonnes
-		
+
 		/* je les ai remontés plus haut pour pouvoir donner l'adresse de productsTable a la fonction loadTypes()
 		GtkWidget* productsTable;
 		productsTable = gtk_table_new(1, 4, TRUE);
@@ -149,7 +149,7 @@ void Windowscommande(){
 				sUtf8 = g_locale_to_utf8(row[1], -1, NULL, NULL, NULL);
 				burger_button = gtk_button_new_with_label(sUtf8);
 
-			
+
 				// on ajoute la fonction d'ajout au panier sur le bouton
 				g_signal_connect(G_OBJECT(burger_button), "clicked", G_CALLBACK(addPanier), NULL);
 
@@ -191,7 +191,7 @@ void Windowscommande(){
 
 
 
-	
+
 		// on cree le tableau dynamique qui va contenir les types en unique
 		char** fullTypesArray;
 		char** inter;
@@ -227,7 +227,7 @@ void Windowscommande(){
 
 			fullTypesArraySize += 1;
 
-			// ### A DECOMMENTER POUR COMPRENDRE 
+			// ### A DECOMMENTER POUR COMPRENDRE
 			// printf("Voici fullTypes : \n");
 			// for (int i = 0; i < fullTypesArraySize; i++)
 			// 	printf("	%s\n", fullTypesArray[i]);
@@ -240,18 +240,18 @@ void Windowscommande(){
 		for (i = 0; i < fullTypesArraySize; i++) {
 			for (j = i+1; j < fullTypesArraySize; j++) {
 				if (!strcmp(fullTypesArray[i], fullTypesArray[j])) {
-					// ### A DECOMMENTER POUR COMPRENDRE 
+					// ### A DECOMMENTER POUR COMPRENDRE
 					// printf("doublon : %s == %s\n", fullTypesArray[i], fullTypesArray[j]);
 					strcpy(fullTypesArray[j], "");
 				}
 				// } else {
-					// ### A DECOMMENTER POUR COMPRENDRE 
+					// ### A DECOMMENTER POUR COMPRENDRE
 					// printf("differents : %s <> %s\n", fullTypesArray[i], fullTypesArray[j]);
 				// }
 			}
 		}
 
-		// ### A DECOMMENTER POUR COMPRENDRE 
+		// ### A DECOMMENTER POUR COMPRENDRE
 		// printf("\nTrie fullTypes : \n");
 		// for (i = 0; i < fullTypesArraySize; i++)
 		// 	printf("	%s\n", fullTypesArray[i]);
@@ -269,7 +269,7 @@ void Windowscommande(){
 				typesCounter++;
 
 				inter = malloc(sizeof(char*) * typesSize + 1);
-				// on copie types dans inter 
+				// on copie types dans inter
 				for (j = 0; j < typesSize; j++) {
 					inter[j] = malloc(sizeof(char) * 255);
 					strcpy(inter[j], types[j]);
@@ -283,11 +283,11 @@ void Windowscommande(){
 				types = inter;
 
 				typesSize++;
-			
+
 			}
 		}
 
-		// ### A DECOMMENTER POUR COMPRENDRE 
+		// ### A DECOMMENTER POUR COMPRENDRE
 		// printf("On a %d types\n", typesCounter);
 		// printf("types : ");
 		// for (i = 0; i < typesSize; i++)
@@ -327,10 +327,10 @@ void Windowscommande(){
 
 		for (i = 0; i < fullTypesArraySize; i++)
 			free(fullTypesArray[i]);
-		
+
 		for (i = 0; i < typesSize; i++)
 			free(inter[i]);
-		
+
 		for (i = 0; i < typesSize; i++)
 			free(types[i]);
 
@@ -371,7 +371,7 @@ void Windowscommande(){
 	g_free(sUtf8);
 
 	gtk_widget_show_all(pWindow);
-	
+
 	// Affichage de la fenêtre
 	gtk_widget_show(pWindow);
 
@@ -381,14 +381,10 @@ void Windowscommande(){
 }
 
 void OnDestroy(GtkWidget *pWidget, gpointer pData) {
-	// Arret de la boucle evenementielle 
+	// Arret de la boucle evenementielle
 	gtk_main_quit();
 }
 
-
-void addPanier(GtkWidget *btn) {
-	printf("J'ajoute : %s\n", gtk_button_get_label(GTK_BUTTON(btn)));
-}
 
 
 void loadTypes(GtkWidget *btn, void** widgetsTab) {
@@ -425,7 +421,7 @@ void loadTypes(GtkWidget *btn, void** widgetsTab) {
 		GtkWidget* burger_box;
 		GtkWidget* burger_image;
 		GtkWidget* burger_button;
-		
+
 		gtk_table_set_row_spacings(GTK_TABLE(productsTable), 20);
 		gtk_table_set_col_spacings(GTK_TABLE(productsTable), 20);
 		int row_start = 0;
@@ -448,7 +444,7 @@ void loadTypes(GtkWidget *btn, void** widgetsTab) {
 			sUtf8 = g_locale_to_utf8(row[1], -1, NULL, NULL, NULL);
 			burger_button = gtk_button_new_with_label(sUtf8);
 
-		
+
 			// on ajoute la fonction d'ajout au panier sur le bouton
 			g_signal_connect(G_OBJECT(burger_button), "clicked", G_CALLBACK(addPanier), NULL);
 
