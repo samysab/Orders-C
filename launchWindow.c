@@ -2,14 +2,14 @@ void adminLoginWindow();
 
 void firstWindow(){
 
-	// Déclaration des widget 
+	// Déclaration des widget
 	GtkWidget *pWindow;
 	GtkWidget *pLabelOrdersC;
 	GtkWidget *pLabelDescription;
 	gchar* sUtf8;
 	GtkWidget *pButton[3];
 	GtkWidget *pTable;
-	// Création de la fenêtre 
+	// Création de la fenêtre
 	pWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 		// Ajouter un titre à la fenetre
 	gtk_window_set_title(GTK_WINDOW(pWindow), "Page acceuil");
@@ -55,7 +55,7 @@ void firstWindow(){
 	g_signal_connect(G_OBJECT(pButton[1]),"clicked",G_CALLBACK(Windowscommande),NULL);
 	g_signal_connect(G_OBJECT(pButton[2]),"clicked",G_CALLBACK(adminLoginWindow),NULL);
 
-	// Connexion du signal "destroy" 
+	// Connexion du signal "destroy"
 	g_signal_connect(G_OBJECT(pWindow), "destroy", G_CALLBACK(OnDestroy), NULL);
 
 
@@ -64,11 +64,9 @@ void firstWindow(){
 	// gtk_container_add(GTK_CONTAINER(pWindow), pLabelDescription);
 
 	gtk_widget_show_all(pWindow);
-	// Affichage de la fenêtre 
+	// Affichage de la fenêtre
 	gtk_widget_show(pWindow);
-
-	// Demarrage de la boucle evenementielle 
+	// Demarrage de la boucle evenementielle
 	gtk_main();
-	newOrder();
 
 }

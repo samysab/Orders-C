@@ -17,7 +17,10 @@ void newOrder();
 
 int main(int argc,char **argv)
 {
+
     gtk_init(&argc,&argv);
     firstWindow();
+    // A la fin du programme, l'id de orderId s'incremmente autmatiquement
+    newOrder();
     return EXIT_SUCCESS;
 }
