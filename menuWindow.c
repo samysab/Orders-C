@@ -1,5 +1,5 @@
 void OnDestroy(GtkWidget *pWidget, gpointer pData);
-void addPanier(GtkWidget *pWidget, MYSQL *mysql);
+void addPanier(GtkWidget *pWidget);
 void loadTypes(GtkWidget *pWidget, void**);
 void orderWindow();
 
