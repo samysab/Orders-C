@@ -8,6 +8,7 @@ typedef struct product {
 	struct product *next;
 } product_t;
 
+
 void OnDestroy(GtkWidget *pWidget, void* pData);
 void loadTypes(GtkWidget *pWidget, void**);
 void browseList(product_t *);
@@ -15,112 +16,6 @@ void addList(product_t*, int, char name[50], char image_path[50], int);
 void addTypesList(GtkWidget *btn, void** data);
 
 void orderWindow();
-
-
-// fonction pour afficher une liste
-void browseList(product_t *head) {
-	printf("\n### Browse list ###\n");
-	product_t *current = head;
-	while (current != NULL) {
-		printf("	current->id : %d\n", current->id);
-		printf("	current->name : %s\n", current->name);
-		printf("	current->image_path : %s\n", current->image_path);
-		printf("	current->price : %d\n\n", current->price);
-		current = current->next;
-	}
-}
-
-// fonction pour ajouter un produit en fin d'une liste
-void addList(product_t *head, int id, char name[50], char image_path[50], int price) {
-	product_t *current = head;
-
-	while (current->next != NULL)
-		current = current->next;
-
-	current->next = malloc(sizeof(product_t));
-
-	current->next->id = id;
-	strcpy(current->next->name, name);
-	strcpy(current->next->image_path, image_path);
-	current->next->price = price;
-	current->next->next = NULL;
-}
-
-// suppression en tete
-product_t* deleteFirst(product_t *start) {
-	product_t *current = start;
-	if (current != NULL) {
-		start = start->next;
-		free(current);
-	}
-	return start;
-}
-
-product_t* deleteList(product_t *start) {
-	while (start != NULL) {
-		start = deleteFirst(start);
-	}
-	return NULL;
-}
-
-
-/*
-* ####################################
-* ######## Ajout d'un produit ########
-* ####################################
-*/
-
-void addTypesList(GtkWidget *btn, void** data) {
-	/*
-	* addTypesList va recevoir :
-	*	- les details d'un produit clique
-	*	- la liste chaine head
-	*
-	* et va ajouter a head comme nouveau maillon le produit clique
-	*
-	*/
-
-	char produit_choisi[50];
-	strcpy(produit_choisi, gtk_button_get_label(GTK_BUTTON(btn)));
-
-
-	printf("\nPartie 1 - Details du produit clique\n");
-
-
-	product_t *loadList = (product_t*)data[5];
-	// on ignore le premier car c'est pas une vraie donnee
-	loadList = loadList->next;
-
-	// on s'avance jusqu'a la case qui contient les details du produit qu'on a clique
-	while (strcmp(loadList->name, produit_choisi)) {
-		loadList = loadList->next;
-	}
-	// printf("stop");
-	// affichage des details du produit clique
-	printf("%d\n", loadList->id);
-	printf("%s\n", loadList->name);
-	printf("%s\n", loadList->image_path);
-	printf("%d\n", loadList->price);
-
-
-	// on ajoute le produit clique a la liste chainee du panier
-	printf("\nPartie 2 - Affichage du panier actuel\n");
-	printf("clique sur : %s\n", produit_choisi);
-	// on recupere head, en le convertissant en son type respectif
-	product_t *head = (product_t*)data[3];
-	// // on affiche l'id par exemple
-	// printf("%d\n", (int*)head->id);
-	// printf("%s\n", (int*)head->name);
-	// printf("%s\n", (int*)head->image_path);
-	// printf("%d\n", (int*)head->price);
-	addList(head, loadList->id, loadList->name, loadList->image_path, loadList->price);
-
-	printf("Voici le panier : \n");
-	browseList(head);
-
-
-	printf("went through\n");
-}
 
 
 void Windowscommande(){
