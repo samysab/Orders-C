@@ -1,7 +1,3 @@
-void OnDestroy(GtkWidget *pWidget, void* pData);
-void loadTypes(GtkWidget *pWidget, void**);
-void orderWindow();
-
 // structure pour la manipulation des listes chainees des produits
 typedef struct product {
 	int id;
@@ -11,6 +7,14 @@ typedef struct product {
 
 	struct product *next;
 } product_t;
+
+void OnDestroy(GtkWidget *pWidget, void* pData);
+void loadTypes(GtkWidget *pWidget, void**);
+void browseList(product_t *);
+void addList(product_t*, int, char name[50], char image_path[50], int);
+void addTypesList(GtkWidget *btn, void** data);
+
+void orderWindow();
 
 
 // fonction pour afficher une liste
@@ -82,13 +86,16 @@ void addTypesList(GtkWidget *btn, void** data) {
 
 	printf("\nPartie 1 - Details du produit clique\n");
 
+
 	product_t *loadList = (product_t*)data[5];
+	// on ignore le premier car c'est pas une vraie donnee
 	loadList = loadList->next;
 
 	// on s'avance jusqu'a la case qui contient les details du produit qu'on a clique
 	while (strcmp(loadList->name, produit_choisi)) {
 		loadList = loadList->next;
 	}
+	// printf("stop");
 	// affichage des details du produit clique
 	printf("%d\n", loadList->id);
 	printf("%s\n", loadList->name);
@@ -305,19 +312,14 @@ void Windowscommande(){
 		gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolledWindowTypes), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
 
 
-		// panierArray
-		int *panierArray;
-		int panierArraySize;
-		panierArraySize = 1;
-
-		panierArray = malloc(sizeof(int) * panierArraySize);
-		panierArray[0] = 132;
-		// fin panierArray
-
 		// on cree une liste chainee des produits contenus
 		product_t *loadTypesList = NULL;
-
-
+		loadTypesList = malloc(sizeof(product_t));
+		loadTypesList->id = 5555;
+		strcpy(loadTypesList->name, "name_test_origin");
+		strcpy(loadTypesList->image_path, "./demo.png");
+		loadTypesList->price = 6666;
+		loadTypesList->next = NULL;
 
 		// on cree le tableau qui contiendra nos widgets de reference
 		void** widgetsTab;
@@ -369,13 +371,14 @@ void Windowscommande(){
 		// on passe a la deuxieme requete (les produits)
 
 
-		mysql_query(&mysql, "SELECT productId, productName, productImg FROM products");
+		mysql_query(&mysql, "SELECT productId, productName, productImg, productPrice FROM products");
 
 
 		result = mysql_use_result(&mysql);
 
 		GtkWidget* burger_box;
 		GtkWidget* burger_image;
+		GtkWidget* burger_price;
 		GtkWidget* burger_button;
 
 
@@ -397,9 +400,18 @@ void Windowscommande(){
 		int col_start = 0;
 		int	col_end = 1;
 
-
-
 		gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolledWindow), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
+
+		// loadTypesList a deja ete declare et initialise plus haut,
+		// on a cree un premier element pour pouvoir en rajouter a la suite
+		loadTypesList = malloc(sizeof(product_t));
+		loadTypesList->id = 9999;
+		strcpy(loadTypesList->name, "name_test");
+		strcpy(loadTypesList->image_path, "./demo.png");
+		loadTypesList->price = 8888;
+		loadTypesList->next = NULL;
+
+		product_t *current;
 
 		while ((row = mysql_fetch_row(result))) {
 			/*
@@ -412,15 +424,25 @@ void Windowscommande(){
 
 			burger_image = gtk_image_new_from_file(row[2]);
 
+			sUtf8 = g_locale_to_utf8(strcat(row[3], " €"), -1, NULL, NULL, NULL);
+			burger_price = gtk_label_new(sUtf8);
+
 			sUtf8 = g_locale_to_utf8(row[1], -1, NULL, NULL, NULL);
 			burger_button = gtk_button_new_with_label(sUtf8);
 
+			current = loadTypesList;
+
+			addList(current, atoi(row[0]), row[1], row[2], atoi(row[3]));
+
+
+			widgetsTab[5] = loadTypesList;
 
 			// on ajoute la fonction d'ajout au panier sur le bouton
 			g_signal_connect(G_OBJECT(burger_button), "clicked", G_CALLBACK(addTypesList), widgetsTab);
 
 
 			gtk_box_pack_start(GTK_BOX(burger_box), burger_image, FALSE, FALSE, 0);
+			gtk_box_pack_start(GTK_BOX(burger_box), burger_price, FALSE, FALSE, 0);
 			gtk_box_pack_start(GTK_BOX(burger_box), burger_button, FALSE, FALSE, 0);
 
 			gtk_table_attach(GTK_TABLE(productsTable), burger_box, row_start, row_end, col_start, col_end, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
