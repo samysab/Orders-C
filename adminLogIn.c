@@ -5,7 +5,6 @@ void adminLoginWindow(){
 
 	// Déclaration des widget 
 	GtkWidget *pWindow;
-	GtkWidget *rootBox;
 	GtkWidget *pLabelAdminPanel;
 	GtkWidget *pLabelLogin;
 	GtkWidget *pLabelPassword;
@@ -20,7 +19,6 @@ void adminLoginWindow(){
 	pWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
 	// Creation du container root
-	rootBox = gtk_hbox_new(TRUE, 0);
 
 	// Ajouter un titre à la fenetre
 	gtk_window_set_title(GTK_WINDOW(pWindow), "Recapitulatif de votre commande - Burger C");
