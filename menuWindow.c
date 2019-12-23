@@ -27,6 +27,7 @@ void Windowscommande(){
 	gchar* sUtf8;
 	GtkWidget *pButton[5];
 	GtkWidget *pTable;
+	GtkWidget *panierWindowScrollbar;
 
 	// liste chainee qui contient le panier
 	product_t *head = NULL;
@@ -67,9 +68,15 @@ void Windowscommande(){
 	pButton[4] = gtk_button_new_with_label("Valider la commande");
 
 
+	panierWindowScrollbar = gtk_scrolled_window_new(NULL, NULL);
+	GtkWidget* panierRootbox = gtk_hbox_new(FALSE, 0);
+	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(panierWindowScrollbar), panierRootbox);
+
+
 	gtk_table_attach(GTK_TABLE(pTable), pLabelOrdersC, 1, 2, 0, 1,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
 	gtk_table_attach(GTK_TABLE(pTable), pLabelOrders, 0, 1, 5, 6,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
 	gtk_table_attach(GTK_TABLE(pTable), pButton[4], 5, 6, 6, 7, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
+	gtk_table_attach(GTK_TABLE(pTable), panierWindowScrollbar, 1, 5, 5, 7, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
 
 
 
@@ -223,7 +230,7 @@ void Windowscommande(){
 		widgetsTab[1] = scrolledWindow;
 		widgetsTab[2] = &mysql;
 		widgetsTab[3] = head;
-		// widgetsTab[4] contient les infos du produit clique
+		widgetsTab[4] = panierWindowScrollbar;
 		widgetsTab[5] = loadTypesList;
 
 
