@@ -1,24 +1,15 @@
-// structure pour la manipulation des listes chainees des produits
-typedef struct product {
-	int id;
-	char name[50];
-	char image_path[50];
-	int price;
-
-	struct product *next;
-} product_t;
-
 
 void OnDestroy(GtkWidget *pWidget, void* pData);
 void loadTypes(GtkWidget *pWidget, void**);
 void browseList(product_t *);
 void addList(product_t*, int, char name[50], char image_path[50], int);
 void addTypesList(GtkWidget *btn, void** data);
-
 void orderWindow();
 
 
-void Windowscommande(){
+
+void Windowscommande(product_t* panier){
+
 
 	// Déclaration des widget
 	GtkWidget *pWindow;
@@ -30,13 +21,13 @@ void Windowscommande(){
 	GtkWidget *panierWindowScrollbar;
 
 	// liste chainee qui contient le panier
-	product_t *head = NULL;
-	head = malloc(sizeof(product_t));
-	head->id = 19;
-	strcpy(head->name, "Premier Element Panier");
-	strcpy(head->image_path, "./sample.png");
-	head->price = 199;
-	head->next = NULL;
+	product_t* head = panier;
+	// head = malloc(sizeof(product_t));
+	// head->id = 19;
+	// strcpy(head->name, "Premier Element Panier");
+	// strcpy(head->image_path, "./sample.png");
+	// head->price = 199;
+	// head->next = NULL;
 
 	// Création de la fenêtre
 	pWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -229,7 +220,7 @@ void Windowscommande(){
 		widgetsTab[0] = pTable;
 		widgetsTab[1] = scrolledWindow;
 		widgetsTab[2] = &mysql;
-		widgetsTab[3] = head;
+		widgetsTab[3] = panier;
 		widgetsTab[4] = panierWindowScrollbar;
 		widgetsTab[5] = loadTypesList;
 
@@ -395,8 +386,7 @@ void Windowscommande(){
 
 
 
-
-	g_signal_connect(G_OBJECT(pButton[4]),"clicked",G_CALLBACK(orderWindow),NULL);
+	g_signal_connect(G_OBJECT(pButton[4]),"clicked",G_CALLBACK(orderWindow), panier);
 
 	// Connexion du signal "destroy"
 	g_signal_connect(G_OBJECT(pWindow), "destroy", G_CALLBACK(OnDestroy), NULL);

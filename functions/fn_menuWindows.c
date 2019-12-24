@@ -98,8 +98,7 @@ void addTypesList(GtkWidget *btn, void** data) {
 	*/
 	
 
-	// 1
-	gtk_container_remove(GTK_CONTAINER((GtkWidget*)data[0]), (GtkWidget*)data[4]);
+
 
 	// 2
 	GtkWidget* panierWindowScrollbar = gtk_scrolled_window_new(NULL, NULL);
@@ -194,10 +193,10 @@ void addTypesList(GtkWidget *btn, void** data) {
 	// on recupere head, en le convertissant en son type respectif
 	product_t *panier = (product_t*)data[3];
 	// // on affiche l'id par exemple
-	printf("%d\n", (int*)loadList->id);
-	printf("%s\n", (int*)loadList->name);
-	printf("%s\n", (int*)loadList->image_path);
-	printf("%d\n", (int*)loadList->price);
+	printf("%d\n", loadList->id);
+	printf("%s\n", loadList->name);
+	printf("%s\n", loadList->image_path);
+	printf("%d\n", loadList->price);
 	addList(panier, loadList->id, loadList->name, loadList->image_path, loadList->price);
 
 	printf("Voici le panier : \n");
@@ -207,15 +206,9 @@ void addTypesList(GtkWidget *btn, void** data) {
 	printf("went through\n");
 }
 
-// ...
-// |__panierWindowScrollbar
-// 	|___panierRootbox
-// 		|___newProduitDansPanier
-// 			|__btn
 
 void removeProduct(GtkWidget* btn, void** removeInfos) {
 
-	printf("je supprime \n");
 	// partie graphique
 	GtkWidget* la_box_du_produit_clique = gtk_widget_get_parent(btn);
 	GtkWidget* rootbox = gtk_widget_get_parent(la_box_du_produit_clique);
@@ -224,11 +217,7 @@ void removeProduct(GtkWidget* btn, void** removeInfos) {
 
 	gtk_widget_show_all(rootbox);
 
-	// GList *children = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_widget_get_parent(btn))));
-	// GtkWidget* label_text = g_list_nth_data(children, 0);
-
-	printf("j'ai clique sur : %s", removeInfos[1]);
-
+	printf("j'ai supprime : %s\n", removeInfos[1]);
 
 
 
