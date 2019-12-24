@@ -1,4 +1,4 @@
-void removeProduct(GtkWidget*);
+void removeProduct(GtkWidget*, void**);
 
 // fonction pour afficher une liste
 void browseList(product_t *head) {
@@ -96,6 +96,7 @@ void addTypesList(GtkWidget *btn, void** data) {
 	* 5. on ajoute la rootbox a panierRootbox
 	* 6. 
 	*/
+	
 
 	// 1
 	gtk_container_remove(GTK_CONTAINER((GtkWidget*)data[0]), (GtkWidget*)data[4]);
@@ -130,7 +131,13 @@ void addTypesList(GtkWidget *btn, void** data) {
 		newProduitLabel = gtk_label_new(current->name);
 		enleverButton = gtk_button_new_with_label("Retirer");
 
-		g_signal_connect(G_OBJECT(enleverButton), "clicked", G_CALLBACK(removeProduct), NULL);
+		void** removeInfos;
+		removeInfos = malloc(sizeof(void*) * 2);
+		removeInfos[0] = data[3];
+		removeInfos[1] = malloc(sizeof(char) * 50);
+		strcpy(removeInfos[1], current->name);
+
+		g_signal_connect(G_OBJECT(enleverButton), "clicked", G_CALLBACK(removeProduct), removeInfos);
 
 		// on pack le tout dans la box
 		gtk_box_pack_start(GTK_BOX(newProduitDansPanier), newProduitLabel, FALSE, FALSE, 0);
@@ -152,7 +159,13 @@ void addTypesList(GtkWidget *btn, void** data) {
 	// le bouton retirer
 	enleverButton = gtk_button_new_with_label("Retirer");
 
-	g_signal_connect(G_OBJECT(enleverButton), "clicked", G_CALLBACK(removeProduct), NULL);
+	void** removeInfos;
+	removeInfos = malloc(sizeof(void*) * 2);
+	removeInfos[0] = data[3];
+	removeInfos[1] = malloc(sizeof(char) * 50);
+	strcpy(removeInfos[1], loadList->name);
+
+	g_signal_connect(G_OBJECT(enleverButton), "clicked", G_CALLBACK(removeProduct), removeInfos);
 
 	// on pack le tout dans la box
 	gtk_box_pack_start(GTK_BOX(newProduitDansPanier), newProduitLabel, FALSE, FALSE, 0);
@@ -200,17 +213,40 @@ void addTypesList(GtkWidget *btn, void** data) {
 // 		|___newProduitDansPanier
 // 			|__btn
 
-void removeProduct(GtkWidget* btn) {
+void removeProduct(GtkWidget* btn, void** removeInfos) {
 
 	printf("je supprime \n");
-
+	// partie graphique
 	GtkWidget* la_box_du_produit_clique = gtk_widget_get_parent(btn);
 	GtkWidget* rootbox = gtk_widget_get_parent(la_box_du_produit_clique);
-
 
 	gtk_container_remove(GTK_CONTAINER(rootbox), la_box_du_produit_clique);
 
 	gtk_widget_show_all(rootbox);
+
+	// GList *children = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_widget_get_parent(btn))));
+	// GtkWidget* label_text = g_list_nth_data(children, 0);
+
+	printf("j'ai clique sur : %s", removeInfos[1]);
+
+
+
+
+	// partie liste
+	product_t *current = (product_t*)removeInfos[0];
+	// tant qu'on trouve pas un name identique a celui cherché
+	// on itère
+	while ( strcmp(current->next->name, removeInfos[1]) != 0) {
+		// on passe au prochain
+		current = current->next;
+	}
+	// on s'est arrete un cran avant 
+	
+	// on efface le pointeur vers le n+1
+	free(current->next);
+	
+	// on redirige vers n+2
+	current->next = current->next->next;
 
 }
 
