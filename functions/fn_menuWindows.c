@@ -13,6 +13,11 @@ void browseList(product_t *head) {
 	}
 }
 
+
+
+
+
+
 // fonction pour ajouter un produit en fin d'une liste
 void addList(product_t *head, int id, char name[50], char image_path[50], int price) {
 	product_t *current = head;
@@ -45,6 +50,22 @@ product_t* deleteList(product_t *start) {
 	}
 	return NULL;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*
@@ -85,6 +106,16 @@ void addTypesList(GtkWidget *btn, void** data) {
 	printf("%s\n", loadList->image_path);
 	printf("%d\n", loadList->price);
 
+	// On augmente la somme total du panier
+	*(int*)data[6] += loadList->price;
+	printf("\n####### nouveau total : %d\n", *(int*)data[6]);
+
+	char label_total[20];
+	sprintf(label_total, "Total : %d euros", *(int*)data[6]);
+	gtk_label_set_markup(GTK_LABEL((GtkWidget*)data[7]), label_total);
+
+
+
 	// on a les infos du produit
 	// on a les adresses du tableau pTable
 	// on peut joindre les 2 bouts
@@ -94,9 +125,9 @@ void addTypesList(GtkWidget *btn, void** data) {
 	* 3. on ajoute les produits produits déjà présents depuis la liste chainee panier A cette rootbox
 	* 4. on ajoute le produit clique a la rootbox
 	* 5. on ajoute la rootbox a panierRootbox
-	* 6. 
+	* 6.
 	*/
-	
+
 
 
 
@@ -104,11 +135,11 @@ void addTypesList(GtkWidget *btn, void** data) {
 	GtkWidget* panierWindowScrollbar = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(panierWindowScrollbar), GTK_POLICY_ALWAYS, GTK_POLICY_NEVER);
 	// on cree une box racine (les windowsscrollbar ne peuvent contenir qu'un seul enfant)
-	GtkWidget* panierRootbox = gtk_hbox_new(FALSE, 0);
+	GtkWidget* panierRootbox = gtk_hbox_new(FALSE, 15);
 
 	// la box du produit
 	GtkWidget* newProduitDansPanier;
-	// le label du produit 
+	// le label du produit
 	GtkWidget* newProduitLabel;
 	// le bouton Retirer
 	GtkWidget* enleverButton;
@@ -121,20 +152,23 @@ void addTypesList(GtkWidget *btn, void** data) {
 	while (current != NULL) {
 		// la box du produit
 		GtkWidget* newProduitDansPanier;
-		// le label du produit 
+		// le label du produit
 		GtkWidget* newProduitLabel;
 		// le bouton Retirer
 		GtkWidget* enleverButton;
 
-		newProduitDansPanier = gtk_vbox_new(FALSE, 0);
+		newProduitDansPanier = gtk_vbox_new(FALSE, 15);
 		newProduitLabel = gtk_label_new(current->name);
 		enleverButton = gtk_button_new_with_label("Retirer");
 
 		void** removeInfos;
-		removeInfos = malloc(sizeof(void*) * 2);
+		removeInfos = malloc(sizeof(void*) * 5);
 		removeInfos[0] = data[3];
 		removeInfos[1] = malloc(sizeof(char) * 50);
 		strcpy(removeInfos[1], current->name);
+		removeInfos[2] = data[6];
+		removeInfos[3] = &current->price;
+		removeInfos[4] = data[7];
 
 		g_signal_connect(G_OBJECT(enleverButton), "clicked", G_CALLBACK(removeProduct), removeInfos);
 
@@ -143,7 +177,7 @@ void addTypesList(GtkWidget *btn, void** data) {
 		gtk_box_pack_start(GTK_BOX(newProduitDansPanier), enleverButton, FALSE, FALSE, 0);
 
 		// on pack la box dans la rootbox
-		gtk_box_pack_start(GTK_BOX(panierRootbox), newProduitDansPanier, FALSE, FALSE, 0);
+		gtk_box_pack_start(GTK_BOX(panierRootbox), newProduitDansPanier, FALSE, TRUE, 0);
 
 		// on passe au suivant
 		current = current->next;
@@ -151,18 +185,24 @@ void addTypesList(GtkWidget *btn, void** data) {
 
 
 	// 4
-	// la box du produit 
-	newProduitDansPanier = gtk_vbox_new(FALSE, 0);
-	// le nom du produit 
+	// la box du produit
+	newProduitDansPanier = gtk_vbox_new(FALSE, 15);
+	// le nom du produit
 	newProduitLabel = gtk_label_new(loadList->name);
 	// le bouton retirer
 	enleverButton = gtk_button_new_with_label("Retirer");
 
 	void** removeInfos;
-	removeInfos = malloc(sizeof(void*) * 2);
+	removeInfos = malloc(sizeof(void*) * 5);
 	removeInfos[0] = data[3];
 	removeInfos[1] = malloc(sizeof(char) * 50);
 	strcpy(removeInfos[1], loadList->name);
+	// on passe l'adresse du pointeur vers la somme total (widgetsTab[6])
+	removeInfos[2] = data[6];
+	// et le prix a soustraire
+	removeInfos[3] = &loadList->price;
+	removeInfos[4] = data[7];
+
 
 	g_signal_connect(G_OBJECT(enleverButton), "clicked", G_CALLBACK(removeProduct), removeInfos);
 
@@ -207,6 +247,15 @@ void addTypesList(GtkWidget *btn, void** data) {
 }
 
 
+
+
+
+
+
+
+
+
+
 void removeProduct(GtkWidget* btn, void** removeInfos) {
 
 	// partie graphique
@@ -217,9 +266,21 @@ void removeProduct(GtkWidget* btn, void** removeInfos) {
 
 	gtk_widget_show_all(rootbox);
 
-	printf("j'ai supprime : %s\n", removeInfos[1]);
 
+	// on stock pas la variable brute du total sinon on modifierait que une variable locale...
+	// on stock l'adresse, comme ca on a pas a ecrire le long (int*)removeInfos[2] a chaque fois
+	int* total = (int*)removeInfos[2];
+	int prix_du_produit_retire = *(int*)removeInfos[3];
+	
+	printf("j'ai supprime : %s (%d)\n", removeInfos[1], prix_du_produit_retire);
 
+	printf("[[[[ %d - %d ]]]]\n", *total, prix_du_produit_retire);
+	*(int*)removeInfos[2] -= prix_du_produit_retire;
+	printf("[[[[[ == %d == ]]]]]\n", *total);
+
+	char label_total[20];
+	sprintf(label_total, "Total : %d euros", *total);
+	gtk_label_set_markup(GTK_LABEL((GtkWidget*)removeInfos[4]), label_total);
 
 	// partie liste
 	product_t *current = (product_t*)removeInfos[0];
@@ -229,15 +290,26 @@ void removeProduct(GtkWidget* btn, void** removeInfos) {
 		// on passe au prochain
 		current = current->next;
 	}
-	// on s'est arrete un cran avant 
-	
+	// on s'est arrete un cran avant
+
 	// on efface le pointeur vers le n+1
 	free(current->next);
-	
+
 	// on redirige vers n+2
 	current->next = current->next->next;
 
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

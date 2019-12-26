@@ -1,4 +1,12 @@
-void orderWindow(){
+void orderWindow(GtkWidget* btn, gpointer panier){
+
+
+	printf("order ##\n");
+	product_t *head = (product_t*)panier;
+	browseList(head);
+
+	// printf("panier id 19 : %d\n", head->id);
+	// printf("panier id name : %s\n", head->name);
 
 	// Déclaration des widget 
 	GtkWidget *pWindow;
