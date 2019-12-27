@@ -1,16 +1,126 @@
+
+typedef struct sum_node {
+	char name[50];
+	int id;
+	int nb;
+	struct sum_node *next;
+} sum_t;
+
+int currentIsInRecap(char name[50], sum_t *list) {
+	sum_t *list_current = list;
+	
+	while (list_current != NULL) {
+		if (!strcmp(list_current->name, name))
+			return 1;
+		
+		list_current = list_current->next;
+	}
+	
+	return 0;
+}
+
+void addRecap(sum_t **head, char name[20], int nb, int id) {
+	if (*head == NULL) {
+		*head = malloc(sizeof(sum_t));
+		strcpy((*head)->name, name);
+		(*head)->nb = nb;
+		(*head)->id = id;
+		(*head)->next = NULL;
+		return;
+	}
+
+	sum_t *current = *head;
+
+	while (current->next != NULL)
+		current = current->next;
+
+	current->next = malloc(sizeof(sum_t));
+	strcpy(current->next->name, name);
+	current->next->nb = nb;
+	current->next->next = NULL;
+}
+
+
+sum_t* sum(product_t *head) {
+	
+	product_t *current = head;
+	sum_t *recap = NULL;
+	int i;
+	
+	while (current != NULL) {
+		i = 0;
+		
+		// si le name du maillon qu'on analyse est deja dans notre liste
+		// recapitulative, bah on a pas besoin de recompter ses occurrences
+		if (currentIsInRecap(current->name, recap)) {
+			current = current->next;
+			continue;
+		}
+
+		// pour chaque noeud de head,
+		// on re-parcourt la liste pour trouver les occurrences,
+		// tmp est la variable itérée dans notre 2e parcours 
+		product_t *tmp = head;
+		while (tmp != NULL) {
+			if (!strcmp(tmp->name, current->name)) {
+				// si on a trouvé une occurrence, on incrémente le compteur pour chaque noeud (chaque "current")
+				i++;
+			}
+			
+			tmp = tmp->next;
+		}
+		// decommenter pour afficher le recap dans la fonction
+		printf("%d %s(id:%d)\n", i, current->name, current->id);
+		
+		addRecap(&recap, current->name, i, current->id);
+		
+		
+		current = current->next;
+	}
+	
+	// printf("dernier : %s\n", current->name);
+	  
+	return recap;
+	
+	
+}
+
+
+// int insertOrder() {
+
+// }
+
+
+void confirmOrder (GtkWidget *wid, GtkWidget *win) {
+	GtkWidget *dialog = NULL;
+
+	dialog = gtk_message_dialog_new (GTK_WINDOW (win), GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK_CANCEL, "Confirmer la commande ? \nUne facture sera generee en pdf");
+	gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (dialog);
+}
+
+
 void orderWindow(GtkWidget* btn, gpointer panier){
 
 
 	printf("order ##\n");
 	product_t *head = (product_t*)panier;
 	browseList(head);
+	
+	// pour l'instant je mets head->next pour skip le 1er
+	// mais au prochain push je ferai en sorte que ce soit clean
+	// sum_t *list_pointer = sum(head->next);
+	// while (list_pointer != NULL) {
+	// 	printf("%s : %d\n", list_pointer->name, list_pointer->nb);
+	// 	list_pointer = list_pointer->next;
+	// }
 
-	// printf("panier id 19 : %d\n", head->id);
-	// printf("panier id name : %s\n", head->name);
 
 	// Déclaration des widget 
 	GtkWidget *pWindow;
 	GtkWidget *pLabelRecapitulatif;
+	GtkWidget *recapScrolledWindow;
 	GtkWidget *pLabelCommentary;
 	gchar* sUtf8;
 	GtkWidget *pTable;
@@ -35,6 +145,10 @@ void orderWindow(GtkWidget* btn, gpointer panier){
 	g_free(sUtf8);
 	gtk_label_set_justify(GTK_LABEL(pLabelRecapitulatif), GTK_JUSTIFY_CENTER);
 
+	recapScrolledWindow = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(recapScrolledWindow), GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+
+
 
 	// Création du label
 	pLabelCommentary = gtk_label_new(NULL);
@@ -50,14 +164,55 @@ void orderWindow(GtkWidget* btn, gpointer panier){
 
 	pButton[0] = gtk_button_new_with_label("Terminer la commande");
 
-	gtk_table_attach(GTK_TABLE(pTable), pLabelRecapitulatif, 0, 2, 0, 1,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
-	gtk_table_attach(GTK_TABLE(pTable), pLabelCommentary, 0, 2, 2, 3,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
-	gtk_table_attach(GTK_TABLE(pTable), text_view, 0, 4, 3, 4,GTK_EXPAND| GTK_FILL ,  GTK_EXPAND | GTK_FILL, 0,0);
-	gtk_table_attach(GTK_TABLE(pTable), pButton[0], 3, 4, 4, 5,GTK_EXPAND,  GTK_EXPAND  , 0,0);
+	gtk_table_attach(GTK_TABLE(pTable), pLabelRecapitulatif, 0, 2, 0, 1, GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
+	gtk_table_attach(GTK_TABLE(pTable), recapScrolledWindow, 0, 4, 1, 2, GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
+	gtk_table_attach(GTK_TABLE(pTable), pLabelCommentary, 0, 2, 2, 3, GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
+	gtk_table_attach(GTK_TABLE(pTable), text_view, 0, 4, 3, 4, GTK_EXPAND| GTK_FILL ,  GTK_EXPAND | GTK_FILL, 0,0);
+	gtk_table_attach(GTK_TABLE(pTable), pButton[0], 3, 4, 4, 5, GTK_EXPAND,  GTK_EXPAND  , 0,0);
 
-	// Connexion du signal "destroy" 
+	// Connexion du signal "destroy"
+	g_signal_connect (G_OBJECT (pButton[0]), "clicked", G_CALLBACK (confirmOrder), (gpointer) pWindow);
 	g_signal_connect(G_OBJECT(pWindow), "destroy", G_CALLBACK(OnDestroy), NULL);
 
+
+	int row_start = 0;
+	int row_end = 1;
+	int col_start = 0;
+	int	col_end = 1;
+	GtkWidget* recapTable = gtk_table_new(3, 3, FALSE);
+	gtk_table_set_row_spacings(GTK_TABLE(recapTable), 20);
+	gtk_table_set_col_spacings(GTK_TABLE(recapTable), 20);
+
+	GtkWidget* recap_label;
+	sum_t *list_pointer = sum(head->next);
+
+	while (list_pointer != NULL) {
+		
+		printf("%s : %d\n", list_pointer->name, list_pointer->nb);
+
+		char recap_str[50];
+		sprintf(recap_str, "%d x %s", list_pointer->nb, list_pointer->name);
+		recap_label = gtk_label_new(recap_str);
+
+		gtk_table_attach(GTK_TABLE(recapTable), recap_label, row_start, row_end, col_start, col_end, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+
+		row_start += 1;
+		row_end += 1;
+
+		if (row_start == 2) {
+			row_start = 0;
+			row_end = 1;
+
+			col_start += 1;
+			col_end = col_start + 1;
+		}
+
+
+		list_pointer = list_pointer->next;
+	}
+
+
+	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(recapScrolledWindow), recapTable);
 
 	//Permet d'afficher toute les infos sur la fenetre
 	// gtk_container_add(GTK_CONTAINER(pWindow), pLabelRecapitulatif);
