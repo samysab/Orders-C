@@ -393,7 +393,7 @@ void Windowscommande(product_t* panier){
 
 
 
-		// mysql_close(&mysql);
+		mysql_close(&mysql);
 
 	} else {
 		printf("Erreur bdd");

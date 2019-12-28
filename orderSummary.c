@@ -91,6 +91,28 @@ sum_t* sum(product_t *head) {
 }
 
 
+int insertInOrders(int productId, int orderId, char name[50]) {
+	MYSQL mysql;
+	mysql_init(&mysql);
+	mysql_options(&mysql, MYSQL_READ_DEFAULT_GROUP, "option");
+
+	if (mysql_real_connect(&mysql, "localhost", "root", "", "burgerc_db", 0, NULL, 0)) {
+		int rowCount;
+
+		char query[255];
+		sprintf(query, "INSERT INTO inorders(Products_productId, Orders_orderId) VALUES (%d, %d)", productId, orderId);
+		mysql_query(&mysql, query);
+		rowCount = mysql_affected_rows(&mysql);
+		printf("%d ligne affectee pour %s\n", rowCount, name);
+
+		return 1;
+	} else {
+		printf("errrrrrrrrrrr");
+		return 0;
+	}
+
+}
+
 int insertOrder(sum_t *head, char comment[255]) {
 	MYSQL mysql;
 	mysql_init(&mysql);
@@ -139,7 +161,7 @@ int insertOrder(sum_t *head, char comment[255]) {
 
 		result = mysql_use_result(&mysql);
 		row = mysql_fetch_row(result);
-
+		
 		int orderId;
 		orderId = atoi(row[0]);
 		// orderId = 55;
@@ -150,44 +172,28 @@ int insertOrder(sum_t *head, char comment[255]) {
 		int i;
 
 
-		// EXPORT PDF
-		/*
-		* ################################
-		* ######### EXPORT PDF ###########
-		* 
-		* head est la liste qui contient les produits avec leur nombre d'occurrence
-		* // sum_t*  
-		* ################################
-		*/
+		while (current != NULL) {
+			for (i = 0; i < current->nb; i++) {
 
+				// WTF
+				// printf("infos : %s %d \n", current->name, current->id);
+				// strcpy(query, "");
+				// sprintf(query, "INSERT INTO inorders(Products_productId, Orders_orderId) VALUES (%d, %d)", current->id, orderId);
 
+				// mysql_query(&mysql, query);
 
-		// while (current != NULL) {
-		// 	for (i = 0; i < current->nb; i++) {
+				// rowCount = mysql_affected_rows(&mysql);
+				// printf("%s a ete ajoute %d fois - %d ligne affectee\n", current->name, current->nb, rowCount);
 
-		// 		// WTF
-		// 		// printf("infos : %s %d \n", current->name, current->id);
-		// 		// // strcpy(query, "");
-		// 		// sprintf(query, "INSERT INTO inorders(Products_productId, Orders_orderId) VALUES (%d, 85)", current->id);
+				insertInOrders(current->id, orderId, current->name);
+			}
 
-		// 		// mysql_query(&mysql, query);
+			current = current->next;
+		}
 
-		// 		// rowCount = mysql_affected_rows(&mysql);
-		// 		// printf("%s a ete ajoute %d fois - %d ligne affectee\n", current->name, current->nb, rowCount);
-
-
-
-		// 		// PDF
-		// 		// on a access a 
-		// 	}
-
-		// 	current = current->next;
-		// }
-
-		mysql_close(&mysql);
+		// mysql_close(&mysql);
 
 		printf("fin");
-		return 1;
 
 	} else {
 		printf("Erreur lors de l'ajout de la commande a la base de donnees\n");
