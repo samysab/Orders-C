@@ -161,7 +161,7 @@ int insertOrder(sum_t *head, char comment[255]) {
 
 		result = mysql_use_result(&mysql);
 		row = mysql_fetch_row(result);
-		
+
 		int orderId;
 		orderId = atoi(row[0]);
 		// orderId = 55;
@@ -171,6 +171,8 @@ int insertOrder(sum_t *head, char comment[255]) {
 		sum_t *current = head;
 		int i;
 
+		//pdgPage(current);
+		configuration(current);
 
 		while (current != NULL) {
 			for (i = 0; i < current->nb; i++) {
@@ -200,6 +202,7 @@ int insertOrder(sum_t *head, char comment[255]) {
 		return 0;
 	}
 
+
 	return 1;
 
 }
@@ -212,6 +215,9 @@ void confirmOrder (GtkWidget *btn, void* infos[3]) {
 	GtkTextIter start;
 	GtkTextIter end;
 	gchar* buf=0;
+
+
+
 
 	//On récupère le buffer
 	text_buffer=gtk_text_view_get_buffer(GTK_TEXT_VIEW(view));
@@ -234,7 +240,7 @@ void confirmOrder (GtkWidget *btn, void* infos[3]) {
 	gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
 
 	gtk_dialog_run (GTK_DIALOG (dialog));
-	
+
 
 	if (insertOrder((sum_t*)infos[1], buf))
 		printf("Tout sest bien passe");

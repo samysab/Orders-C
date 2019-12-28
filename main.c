@@ -2,6 +2,8 @@
 #include <gtk/gtk.h>
 #include <winsock.h>
 #include <MYSQL/mysql.h>
+#include <setjmp.h>
+#include "hpdf.h"
 #include "structures.h"
 #include "menuWindow.c"
 #include "launchWindow.c"
@@ -10,6 +12,8 @@
 #include "functions/addToCard.c"
 #include "functions/newOrder.c"
 #include "functions/fn_menuWindows.c"
+#include "functions/config.c"
+#include "functions/exportPdf.c"
 
 
 void firstWindow();

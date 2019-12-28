@@ -1,0 +1,6 @@
+[Propriete1]
+	[Export PDF]
+
+	Nom du fichier PDF = SAMARCHE;
+	couleur = test;
+	raison = tamere;
