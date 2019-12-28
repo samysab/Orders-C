@@ -1,3 +1,8 @@
+/*
+*Ce fichier permet de definir certaine option modifiable par le client.
+*Chaque options doivent etre separer pas des ";"
+*/
+
 [Propriete1]
 	[Export PDF]
 
