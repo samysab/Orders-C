@@ -2,7 +2,7 @@
 
 
 char** configuration(){
-    printf("bonjour config\n");
+    // printf("bonjour config\n");
     FILE* fichier = NULL;
     char chaine[TAILLE_MAX] = "";
     char* str;

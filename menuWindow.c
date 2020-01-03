@@ -92,8 +92,6 @@ void Windowscommande(product_t* panier){
 
 
 
-
-
 	/*
 	* Partie 1) Récupérer les types, supprimer les doublons et les afficher
 	* Partie 2) Fonction qui récupère les produits selon une catégorie donnée et les ajoute
@@ -116,7 +114,18 @@ void Windowscommande(product_t* panier){
 		int fullTypesArraySize = 1;
 		fullTypesArray = malloc(sizeof(char*) * fullTypesArraySize);
 
-		mysql_query(&mysql, "SELECT productType FROM products");
+
+		char query[200];
+
+		char borneLocation[50];
+		strcpy(borneLocation, config[2]);
+
+		if(borneLocation[strlen(borneLocation)-1] == '\n'){
+			borneLocation[strlen(borneLocation)-1] = '\0';
+		}
+
+		sprintf(query, "SELECT productType FROM products WHERE borneLocation = \"%s\"", borneLocation);
+		mysql_query(&mysql, query);
 
 		MYSQL_ROW firstRow;
 		MYSQL_ROW row;
@@ -288,9 +297,8 @@ void Windowscommande(product_t* panier){
 
 		// on passe a la deuxieme requete (les produits)
 
-
-		mysql_query(&mysql, "SELECT productId, productName, productImg, productPrice FROM products");
-
+		sprintf(query, "SELECT productId, productName, productImg, productPrice FROM products WHERE borneLocation = \"%s\"", borneLocation);
+		mysql_query(&mysql, query);
 
 		result = mysql_use_result(&mysql);
 

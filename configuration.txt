@@ -1,11 +1,17 @@
 /*
-*Ce fichier permet de definir certaine option modifiable par le client.
-*Chaque options doivent etre separer pas des ";"
+* Ce fichier permet de definir certaine option modifiable par le client.
+* Chaque options doivent etre separer pas des ";"
+*
+* borneLocation : McDo, SeaFood, AsiaFood
+*
+*
 */
+
+
 
 [Propriete1]
 	[Export PDF]
 
-	Nom du fichier PDF = SAMARCHE;
+	Nom du fichier PDF = Facture;
 	couleur = test;
-	raison = tamere;
+	borneLocation = SeaFood;

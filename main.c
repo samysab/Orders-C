@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
+#include <gdk/gdk.h>
 #include <winsock.h>
 #include <MYSQL/mysql.h>
 #include <setjmp.h>
@@ -14,7 +15,6 @@
 #include "launchWindow.c"
 #include "orderSummary.c"
 #include "adminLogIn.c"
-
 
 void firstWindow();
 void Windowscommande(product_t*);
