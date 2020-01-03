@@ -6,9 +6,17 @@ void addList(product_t*, int, char name[50], char image_path[50], int);
 void addTypesList(GtkWidget *btn, void** data);
 void orderWindow(GtkWidget*, gpointer);
 
-
-
 void Windowscommande(product_t* panier){
+
+	/*
+	* config[0] = nom du pdf
+	* config[1] = couleur
+	*
+	*/
+
+	char** config = configuration();
+	// printf("#menuWindows voici : le nom du pdf : %s\n", config[0]);
+
 
 	// Déclaration des widget
 	GtkWidget *pWindow;
@@ -215,7 +223,7 @@ void Windowscommande(product_t* panier){
 		GtkWidget* scrolledWindowTypes;
 		scrolledWindowTypes = gtk_scrolled_window_new(NULL, NULL);
 		gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolledWindowTypes), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
-		
+
 		// on cree une liste chainee des produits contenus
 		product_t *loadTypesList = NULL;
 		loadTypesList = malloc(sizeof(product_t));

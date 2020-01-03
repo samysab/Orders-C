@@ -1,11 +1,11 @@
 #define TAILLE_MAX 1000
-void configuration(sum_t*);
 
 
-void configuration(sum_t* current){
+char** configuration(){
+    printf("bonjour config\n");
     FILE* fichier = NULL;
     char chaine[TAILLE_MAX] = "";
-    int* str;
+    char* str;
     int i = 0;
     int nbLine = 3;
    // char temp[5][20];
@@ -55,10 +55,12 @@ void configuration(sum_t* current){
 
                 strcpy(ptr,ptr+strlen(searchPV));
             }
-            //printf("%s", tableau2d[i]);
+            // printf("%s", tableau2d[i]);
         }
+
         fclose(fichier);
     }
-    pdgPage(tableau2d, current);
+    // pdgPage(tableau2d, current);
     //firstWindow(tableau2d);
+    return tableau2d;
 }

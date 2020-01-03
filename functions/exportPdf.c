@@ -31,7 +31,7 @@ void pdgPage(char** tableau2d, sum_t *head){
 
 
     float tw;
-    char pdfName[20] = "";
+    // char pdfName[20] = "";
 
     /*
     * Tableau2d correpond à toute les infos récupperer dans le fichier de configuration
@@ -103,7 +103,7 @@ void pdgPage(char** tableau2d, sum_t *head){
 
     int posY = 210;
     sum_t *current = head;
-    char *totalOrder[10];
+    char totalOrder[10];
     char price[10];
     char number[10];
     int sumPrice;
@@ -113,7 +113,7 @@ void pdgPage(char** tableau2d, sum_t *head){
     sprintf(number,"%d", current->nb);
     sumPrice = current->price * current->nb;
     sprintf(price,"%d", sumPrice);
-    
+
 
         HPDF_Page_BeginText (page);
         HPDF_Page_SetFontAndSize (page, font, 13);

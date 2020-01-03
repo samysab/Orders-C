@@ -163,8 +163,10 @@ int insertOrder(sum_t *head, char comment[255]) {
 		sum_t *current = head;
 		int i;
 
-		//pdgPage(current);
-		configuration(current);
+		char** config = configuration();
+		// printf("#orderSummary voici : le nom du pdf : %s\n", config[0]);
+
+		pdgPage(config, current);
 
 		while (current != NULL) {
 			for (i = 0; i < current->nb; i++) {
@@ -235,7 +237,7 @@ void confirmOrder (GtkWidget *btn, void* infos[3]) {
 
 
 	if (insertOrder((sum_t*)infos[1], buf))
-		printf("Tout sest bien passe");
+		printf("Tout sest bien passe, fin de demonstration\n\n");
 	else
 		printf("Erreurrrr");
 
@@ -244,6 +246,9 @@ void confirmOrder (GtkWidget *btn, void* infos[3]) {
 }
 
 void orderWindow(GtkWidget* btn, gpointer panier){
+
+	char** config = configuration();
+	printf("#orderSummary voici : le nom du pdf : %s\n", config[0]);
 
 
 	printf("order ##\n");

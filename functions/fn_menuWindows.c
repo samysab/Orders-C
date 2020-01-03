@@ -271,8 +271,8 @@ void removeProduct(GtkWidget* btn, void** removeInfos) {
 	// on stock l'adresse, comme ca on a pas a ecrire le long (int*)removeInfos[2] a chaque fois
 	int* total = (int*)removeInfos[2];
 	int prix_du_produit_retire = *(int*)removeInfos[3];
-	
-	printf("j'ai supprime : %s (%d)\n", removeInfos[1], prix_du_produit_retire);
+
+	printf("j'ai supprime : %s (%d)\n", (char*)removeInfos[1], prix_du_produit_retire);
 
 	printf("[[[[ %d - %d ]]]]\n", *total, prix_du_produit_retire);
 	*(int*)removeInfos[2] -= prix_du_produit_retire;

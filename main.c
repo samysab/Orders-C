@@ -5,15 +5,15 @@
 #include <setjmp.h>
 #include "hpdf.h"
 #include "structures.h"
-#include "menuWindow.c"
-#include "launchWindow.c"
-#include "orderSummary.c"
-#include "adminLogIn.c"
 #include "functions/addToCard.c"
 #include "functions/newOrder.c"
 #include "functions/fn_menuWindows.c"
 #include "functions/config.c"
 #include "functions/exportPdf.c"
+#include "menuWindow.c"
+#include "launchWindow.c"
+#include "orderSummary.c"
+#include "adminLogIn.c"
 
 
 void firstWindow();
@@ -21,10 +21,9 @@ void Windowscommande(product_t*);
 void adminLoginWindow();
 void newOrder();
 // void orderWindow(int**);
+char** configuration();
 
-
-int main(int argc,char **argv)
-{
+int main(int argc,char **argv) {
 
     gtk_init(&argc,&argv);
 
