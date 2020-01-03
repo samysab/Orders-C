@@ -1,13 +1,5 @@
 #include <time.h>
 
-typedef struct sum_node {
-	char name[50];
-	int id;
-	int price;
-	int nb;
-	struct sum_node *next;
-} sum_t;
-
 int currentIsInRecap(char name[50], sum_t *list) {
 	sum_t *list_current = list;
 
@@ -64,11 +56,11 @@ sum_t* sum(product_t *head) {
 
 		// pour chaque noeud de head,
 		// on re-parcourt la liste pour trouver les occurrences,
-		// tmp est la variable itérée dans notre 2e parcours
+		// tmp est la variable itÃ©rÃ©e dans notre 2e parcours
 		product_t *tmp = head;
 		while (tmp != NULL) {
 			if (!strcmp(tmp->name, current->name)) {
-				// si on a trouvé une occurrence, on incrémente le compteur pour chaque noeud (chaque "current")
+				// si on a trouvÃ© une occurrence, on incrÃ©mente le compteur pour chaque noeud (chaque "current")
 				i++;
 			}
 
@@ -219,11 +211,11 @@ void confirmOrder (GtkWidget *btn, void* infos[3]) {
 
 
 
-	//On récupère le buffer
+	//On rÃ©cupÃ¨re le buffer
 	text_buffer=gtk_text_view_get_buffer(GTK_TEXT_VIEW(view));
-	//On récupère l'origine du buffer
+	//On rÃ©cupÃ¨re l'origine du buffer
 	gtk_text_buffer_get_start_iter(text_buffer,&start);
-	//On récupère la fin du buffer
+	//On rÃ©cupÃ¨re la fin du buffer
 	gtk_text_buffer_get_end_iter(text_buffer,&end);
 
 	//On copie le contenu du buffer dans une variable
@@ -267,7 +259,7 @@ void orderWindow(GtkWidget* btn, gpointer panier){
 	// }
 
 
-	// Déclaration des widget
+	// DÃ©claration des widget
 	GtkWidget *pWindow;
 	GtkWidget *pLabelRecapitulatif;
 	GtkWidget *recapScrolledWindow;
@@ -277,18 +269,18 @@ void orderWindow(GtkWidget* btn, gpointer panier){
 	GtkWidget* text_view;
 	GtkWidget *pButton[2];
 
-	// Création de la fenêtre
+	// CrÃ©ation de la fenÃªtre
 	pWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-		// Ajouter un titre à la fenetre
+		// Ajouter un titre Ã  la fenetre
 	gtk_window_set_title(GTK_WINDOW(pWindow), "Recapitulatif de votre commande - Burger C");
-		//Initialise la taille des fenetres par défaut
+		//Initialise la taille des fenetres par dÃ©faut
 	gtk_window_set_default_size(GTK_WINDOW(pWindow),500, 400);
 	gtk_window_set_position(GTK_WINDOW(pWindow), GTK_WIN_POS_CENTER);
 
 	pTable= gtk_table_new(5,4,TRUE);
 	gtk_container_add(GTK_CONTAINER(pWindow), GTK_WIDGET(pTable));
 
-	// Création du label
+	// CrÃ©ation du label
 	pLabelRecapitulatif = gtk_label_new(NULL);
 	sUtf8 = g_locale_from_utf8("<b><u><span size=\"20\">Votre Recapitulatif </span></u></b>",-1, NULL,NULL, NULL);     //-1 permet de laisser la lib calculer la longueur de la chaine
 	gtk_label_set_markup(GTK_LABEL(pLabelRecapitulatif), sUtf8);
@@ -300,7 +292,7 @@ void orderWindow(GtkWidget* btn, gpointer panier){
 
 
 
-	// Création du label
+	// CrÃ©ation du label
 	pLabelCommentary = gtk_label_new(NULL);
 	sUtf8 = g_locale_from_utf8("<span size=\"15\">Un commentaire ?</span>",-1, NULL,NULL, NULL);     //-1 permet de laisser la lib calculer la longueur de la chaine
 	gtk_label_set_markup(GTK_LABEL(pLabelCommentary), sUtf8);
@@ -376,7 +368,7 @@ void orderWindow(GtkWidget* btn, gpointer panier){
 
 
 
-	// Affichage de la fenêtre
+	// Affichage de la fenÃªtre
 	gtk_widget_show_all(pWindow);
 
 	// Demarrage de la boucle evenementielle
