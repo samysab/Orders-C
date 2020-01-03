@@ -7,3 +7,11 @@ typedef struct product {
 
 	struct product *next;
 } product_t;
+
+typedef struct sum_node {
+	char name[50];
+	int id;
+	int price;
+	int nb;
+	struct sum_node *next;
+} sum_t;
