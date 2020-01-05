@@ -1,22 +1,6 @@
-
-void OnDestroy(GtkWidget *pWidget, void* pData);
-void loadTypes(GtkWidget *pWidget, void**);
-void browseList(product_t *);
-void addList(product_t*, int, char name[50], char image_path[50], int);
-void addTypesList(GtkWidget *btn, void** data);
-void orderWindow(GtkWidget*, gpointer);
-
-void Windowscommande(product_t* panier){
-
-	/*
-	* config[0] = nom du pdf
-	* config[1] = couleur
-	*
-	*/
+void Windowscommande() {
 
 	char** config = configuration();
-	// printf("#menuWindows voici : le nom du pdf : %s\n", config[0]);
-
 
 	// Déclaration des widget
 	GtkWidget *pWindow;
@@ -24,19 +8,9 @@ void Windowscommande(product_t* panier){
 	GtkWidget *pLabelOrders;
 	GtkWidget *pLabelTotal;
 	gchar* sUtf8;
-	GtkWidget *pButton[5];
+	GtkWidget *pButton;
 	GtkWidget *pTable;
 	GtkWidget *panierWindowScrollbar;
-
-	// liste chainee qui contient le panier
-	// product_t* head = panier;
-	// product_t* head = NULL;
-	// head = malloc(sizeof(product_t));
-	// head->id = 19;
-	// strcpy(head->name, "Premier Element Panier");
-	// strcpy(head->image_path, "./sample.png");
-	// head->price = 199;
-	// head->next = NULL;
 
 	// Création de la fenêtre
 	pWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -74,7 +48,7 @@ void Windowscommande(product_t* panier){
 	gtk_label_set_markup(GTK_LABEL(pLabelOrders), sUtf8);
 	gtk_label_set_justify(GTK_LABEL(pLabelOrders), GTK_JUSTIFY_CENTER);
 
-	pButton[4] = gtk_button_new_with_label("Valider la commande");
+	pButton = gtk_button_new_with_label("Valider la commande");
 
 	panierWindowScrollbar = gtk_scrolled_window_new(NULL, NULL);
 	GtkWidget* panierRootbox = gtk_hbox_new(FALSE, 0);
@@ -87,7 +61,7 @@ void Windowscommande(product_t* panier){
 	gtk_table_attach(GTK_TABLE(pTable), pLabelOrdersC, 1, 2, 0, 1, GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
 	gtk_table_attach(GTK_TABLE(pTable), pLabelTotal, 0, 1, 5, 6, GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
 	gtk_table_attach(GTK_TABLE(pTable), pLabelOrders, 0, 1, 6, 7, GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
-	gtk_table_attach(GTK_TABLE(pTable), pButton[4], 5, 6, 6, 7, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
+	gtk_table_attach(GTK_TABLE(pTable), pButton, 5, 6, 6, 7, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
 	gtk_table_attach(GTK_TABLE(pTable), panierWindowScrollbar, 1, 5, 5, 7, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
 
 
@@ -96,6 +70,18 @@ void Windowscommande(product_t* panier){
 	* Partie 1) Récupérer les types, supprimer les doublons et les afficher
 	* Partie 2) Fonction qui récupère les produits selon une catégorie donnée et les ajoute
 	*/
+
+
+
+	product_t *panier = NULL;
+
+	panier = malloc(sizeof(product_t));
+	panier->id = 1;
+	strcpy(panier->name, "Premier Element Panier");
+	strcpy(panier->image_path, "./sample.png");
+	panier->price = 0;
+	panier->next = NULL;
+
 
 	MYSQL mysql;
 	mysql_init(&mysql);
@@ -328,15 +314,6 @@ void Windowscommande(product_t* panier){
 
 		gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolledWindow), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
 
-		// loadTypesList a deja ete declare et initialise plus haut,
-		// on a cree un premier element pour pouvoir en rajouter a la suite
-		loadTypesList = malloc(sizeof(product_t));
-		loadTypesList->id = 9999;
-		strcpy(loadTypesList->name, "name_test");
-		strcpy(loadTypesList->image_path, "./demo.png");
-		loadTypesList->price = 8888;
-		loadTypesList->next = NULL;
-
 		product_t *current;
 
 		while ((row = mysql_fetch_row(result))) {
@@ -394,32 +371,17 @@ void Windowscommande(product_t* panier){
 
 		gtk_table_attach(GTK_TABLE(pTable), scrolledWindow, 1, 6, 1, 5, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
 
-
-
-
-
-
-
-
-
-
 		mysql_free_result(result);
 
-
-
-
-
-		mysql_close(&mysql);
+		// source de crashs inopinés
+		// mysql_close(&mysql);
 
 	} else {
 		printf("Erreur bdd");
 	}
 
-	// int *nb_copy = malloc(sizeof(int));
-	// *nb_copy = *nb;
-	// printf("%d\n", *nb_copy);
 
-	g_signal_connect(G_OBJECT(pButton[4]),"clicked", G_CALLBACK(orderWindow), panier);
+	g_signal_connect(G_OBJECT(pButton),"clicked", G_CALLBACK(orderWindow), panier);
 
 	// Connexion du signal "destroy"
 	g_signal_connect(G_OBJECT(pWindow), "destroy", G_CALLBACK(OnDestroy), NULL);
@@ -439,10 +401,3 @@ void Windowscommande(product_t* panier){
 	gtk_main();
 
 }
-
-void OnDestroy(GtkWidget *pWidget, void* pData) {
-	// Arret de la boucle evenementielle
-	gtk_main_quit();
-}
-
-

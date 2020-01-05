@@ -1,43 +1,41 @@
+/*
+* Application Burger C - Borne de commande
+* Developped by
+*	Samy HAMED E SABERI
+*	Narek KHATCHATRIAN
+*
+* From November 8 th 2019 to January 6 th 2020
+*
+* Burger C 2019 - 2020 ©
+*/
+
 #include <stdlib.h>
 #include <gtk/gtk.h>
-#include <gdk/gdk.h>
 #include <winsock.h>
+
 #include <MYSQL/mysql.h>
 #include <setjmp.h>
 #include "hpdf.h"
+
 #include "structures.h"
-#include "functions/addToCard.c"
-#include "functions/newOrder.c"
-#include "functions/fn_menuWindows.c"
+#include "prototypes.h"
+
 #include "functions/config.c"
+#include "functions/fn_menuWindows.c"
+#include "functions/fn_orderSummary.c"
 #include "functions/exportPdf.c"
+
 #include "menuWindow.c"
-#include "launchWindow.c"
 #include "orderSummary.c"
 #include "adminLogIn.c"
+#include "firstWindow.c"
 
-void firstWindow();
-void Windowscommande(product_t*);
-void adminLoginWindow();
-void newOrder();
-// void orderWindow(int**);
-char** configuration();
 
 int main(int argc,char **argv) {
 
-    gtk_init(&argc,&argv);
+	gtk_init(&argc,&argv);
 
-	product_t *panier = NULL;
-	panier = malloc(sizeof(product_t));
-	panier->id = 1;
-	strcpy(panier->name, "Premier Element Panier");
-	strcpy(panier->image_path, "./sample.png");
-	panier->price = 0;
-	panier->next = NULL;
+	firstWindow();
 
-	Windowscommande(panier);
-    // orderWindow(&abc);
-    // newOrder();
-    // A la fin du programme, l'id de orderId s'incremmente autmatiquement
-    return EXIT_SUCCESS;
+	return EXIT_SUCCESS;
 }

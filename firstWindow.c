@@ -1,6 +1,4 @@
-void adminLoginWindow();
-
-void firstWindow(){
+void firstWindow() {
 
 	// Déclaration des widget
 	GtkWidget *pWindow;
@@ -9,10 +7,13 @@ void firstWindow(){
 	gchar* sUtf8;
 	GtkWidget *pButton[3];
 	GtkWidget *pTable;
+
 	// Création de la fenêtre
 	pWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
 		// Ajouter un titre à la fenetre
 	gtk_window_set_title(GTK_WINDOW(pWindow), "Page acceuil");
+	
 		//Initialise la taille des fenetres par défaut
 	gtk_window_set_default_size(GTK_WINDOW(pWindow),500, 400);
 	gtk_window_set_position(GTK_WINDOW(pWindow), GTK_WIN_POS_CENTER);
@@ -36,8 +37,6 @@ void firstWindow(){
 	gtk_label_set_justify(GTK_LABEL(pLabelDescription), GTK_JUSTIFY_CENTER);
 
 
-
-
 	pButton[0] = gtk_button_new_with_label("Sur Place");
 	pButton[1] = gtk_button_new_with_label("A Emporter");
 	pButton[2] = gtk_button_new_with_label("Admin");
@@ -49,24 +48,16 @@ void firstWindow(){
 	gtk_table_attach(GTK_TABLE(pTable), pLabelDescription, 1, 3, 2, 3,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
 
 
-
-	//permet d'ouvrir une anouvelle fenetre
-	g_signal_connect(G_OBJECT(pButton[0]),"clicked",G_CALLBACK(Windowscommande),NULL);
-	g_signal_connect(G_OBJECT(pButton[1]),"clicked",G_CALLBACK(Windowscommande),NULL);
-	g_signal_connect(G_OBJECT(pButton[2]),"clicked",G_CALLBACK(adminLoginWindow),NULL);
+	g_signal_connect(G_OBJECT(pButton[0]), "clicked", G_CALLBACK(Windowscommande), NULL);
+	g_signal_connect(G_OBJECT(pButton[1]), "clicked", G_CALLBACK(Windowscommande), NULL);
+	g_signal_connect(G_OBJECT(pButton[2]), "clicked", G_CALLBACK(adminLoginWindow), NULL);
 
 	// Connexion du signal "destroy"
 	g_signal_connect(G_OBJECT(pWindow), "destroy", G_CALLBACK(OnDestroy), NULL);
 
-
-	//Permet d'afficher toute les infos sur la fenetre
-	// gtk_container_add(GTK_CONTAINER(pWindow), pLabelOrdersC);
-	// gtk_container_add(GTK_CONTAINER(pWindow), pLabelDescription);
-
 	gtk_widget_show_all(pWindow);
-	// Affichage de la fenêtre
-	gtk_widget_show(pWindow);
-	// Demarrage de la boucle evenementielle
-	gtk_main();
 
+	gtk_widget_show(pWindow);
+
+	gtk_main();
 }

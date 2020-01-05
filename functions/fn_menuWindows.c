@@ -1,4 +1,26 @@
-void removeProduct(GtkWidget*, void**);
+/*
+* Fichier qui contient les fonctions de la page menuWindows
+* 
+* Ordre des fonctions : 
+* browseList
+* addList
+* addTypesList
+* removeProduct
+* loadTypes
+* OnDestroy
+*
+*
+*/
+
+
+
+
+
+
+
+
+
+
 
 // fonction pour afficher une liste
 void browseList(product_t *head) {
@@ -33,36 +55,6 @@ void addList(product_t *head, int id, char name[50], char image_path[50], int pr
 	current->next->price = price;
 	current->next->next = NULL;
 }
-
-// suppression en tete
-product_t* deleteFirst(product_t *start) {
-	product_t *current = start;
-	if (current != NULL) {
-		start = start->next;
-		free(current);
-	}
-	return start;
-}
-
-product_t* deleteList(product_t *start) {
-	while (start != NULL) {
-		start = deleteFirst(start);
-	}
-	return NULL;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -434,8 +426,9 @@ void loadTypes(GtkWidget *btn, void** widgetsTab) {
 		widgetsTab[1] = scrolledWindow;
 
 		mysql_free_result(result);
+		
 
-		mysql_close(conn);
+		// mysql_close(conn);
 	}
 
 
@@ -446,4 +439,9 @@ void loadTypes(GtkWidget *btn, void** widgetsTab) {
 
 }
 
+
+void OnDestroy(GtkWidget *pWidget, void* pData) {
+	// Arret de la boucle evenementielle
+	gtk_main_quit();
+}
 

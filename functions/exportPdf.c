@@ -1,9 +1,4 @@
-void draw_line_vertical_price(HPDF_Page page, float x, float y);
-void draw_line_vertical(HPDF_Page page, float x, float y);
-void draw_line_horizontal_price(HPDF_Page page, float x, float y);
-void draw_line_horizontal(HPDF_Page page, float x, float y);
-void draw_image (HPDF_Doc pdf, const char *filename, float x, float y);
-void pdgPage(char** tableau2d, sum_t *head);
+#include "../prototypes.h"
 
 jmp_buf env;
 
@@ -21,7 +16,7 @@ error_handler  (HPDF_STATUS   error_no,
 	longjmp(env, 1);
 }
 //char** tableau2d
-void pdgPage(char** tableau2d, sum_t *head){
+void pdgPage(char** tableau2d, sum_t *head) {
 	const char* page_title = "Burger C - Bon de commande";
 
 	HPDF_Doc  pdf;
@@ -29,13 +24,13 @@ void pdgPage(char** tableau2d, sum_t *head){
 	HPDF_Page page;
 	char fname[256] = "";
 
-
 	float tw;
-	// char pdfName[20] = "";
 
 	/*
 	* Tableau2d correpond à toute les infos récupperer dans le fichier de configuration
 	* tableau2d[0] = nom du fichier PDF
+	* tableau2d[1] = couleur
+	* tableau2d[2] = type de produit propose selon la localisation de la borne (borneLocation)
 	*/
 
 	strcpy(fname,tableau2d[0]);
@@ -43,9 +38,6 @@ void pdgPage(char** tableau2d, sum_t *head){
 		fname[strlen(fname)-1] = '\0';
 	}
 	strcat (fname, ".pdf");
-
-
-
 
 	pdf = HPDF_New (error_handler, NULL);
 	if (!pdf) {
@@ -67,7 +59,7 @@ void pdgPage(char** tableau2d, sum_t *head){
 	tw = HPDF_Page_TextWidth (page, page_title);
 	HPDF_Page_BeginText (page);
 	HPDF_Page_MoveTextPos (page, (HPDF_Page_GetWidth(page) - tw) / 2,
-				HPDF_Page_GetHeight (page) - 50);
+	HPDF_Page_GetHeight (page) - 50);
 	HPDF_Page_ShowText (page, page_title);
 	HPDF_Page_EndText (page);
 
@@ -90,11 +82,11 @@ void pdgPage(char** tableau2d, sum_t *head){
 	// Lignes du tableau
 	for(int i = 0; i<8; i++){
 		HPDF_Page_SetLineWidth (page, 0);
-		draw_line_horizontal (page, 20, yArray );
+		draw_line_horizontal (page, 20, yArray);
 		yArray -= space;
 	}
 	HPDF_Page_SetLineWidth (page, 0);
-	draw_line_vertical(page, 20, 700 );
+	draw_line_vertical(page, 20, 700);
 	HPDF_Page_BeginText (page);
 	HPDF_Page_SetFontAndSize (page, font, 13);
 	HPDF_Page_MoveTextPos (page, 220, HPDF_Page_GetHeight (page) - 176);
@@ -110,10 +102,9 @@ void pdgPage(char** tableau2d, sum_t *head){
 	int total = 0;
 
 	while (current != NULL) {
-	sprintf(number,"%d", current->nb);
-	sumPrice = current->price * current->nb;
-	sprintf(price,"%d", sumPrice);
-
+		sprintf(number,"%d", current->nb);
+		sumPrice = current->price * current->nb;
+		sprintf(price,"%d", sumPrice);
 
 		HPDF_Page_BeginText (page);
 		HPDF_Page_SetFontAndSize (page, font, 13);
@@ -134,6 +125,7 @@ void pdgPage(char** tableau2d, sum_t *head){
 		current = current->next;
 		posY+= 35;
 	}
+
 	sprintf(totalOrder,"%d", total);
 
 	HPDF_Page_BeginText (page);
@@ -143,16 +135,15 @@ void pdgPage(char** tableau2d, sum_t *head){
 	HPDF_Page_EndText (page);
 
 	HPDF_Page_SetLineWidth (page, 0);
-	draw_line_vertical(page, 450, 700 );
+	draw_line_vertical(page, 450, 700);
 	HPDF_Page_BeginText (page);
 	HPDF_Page_SetFontAndSize (page, font, 13);
 	HPDF_Page_MoveTextPos (page, 450, HPDF_Page_GetHeight (page) - 176);
 	HPDF_Page_ShowText (page, "Quantite ");
 	HPDF_Page_EndText (page);
 
-
 	HPDF_Page_SetLineWidth (page, 0);
-	draw_line_vertical(page, 500, 700 );
+	draw_line_vertical(page, 500, 700);
 	HPDF_Page_BeginText (page);
 	HPDF_Page_SetFontAndSize (page, font, 13);
 	HPDF_Page_MoveTextPos (page, 510, HPDF_Page_GetHeight (page) - 176);
@@ -160,28 +151,27 @@ void pdgPage(char** tableau2d, sum_t *head){
 	HPDF_Page_EndText (page);
 
 	HPDF_Page_SetLineWidth (page, 0);
-	draw_line_vertical(page, 550, 700 );
+	draw_line_vertical(page, 550, 700);
 
 	//carre pour le total
 	HPDF_Page_SetLineWidth (page, 0);
-	draw_line_horizontal_price (page, 500, 420 );
+	draw_line_horizontal_price (page, 500, 420);
 	HPDF_Page_SetLineWidth (page, 0);
-	draw_line_vertical_price(page, 500, 455 );
+	draw_line_vertical_price(page, 500, 455);
 	HPDF_Page_SetLineWidth (page, 0);
-	draw_line_vertical_price(page, 550, 455 );
+	draw_line_vertical_price(page, 550, 455);
 	HPDF_Page_BeginText (page);
 	HPDF_Page_SetFontAndSize (page, font, 13);
 	HPDF_Page_MoveTextPos (page, 460, HPDF_Page_GetHeight (page) - 425);
 	HPDF_Page_ShowText (page, "Total ");
 	HPDF_Page_EndText (page);
 
-		HPDF_Page_BeginText (page);
+	HPDF_Page_BeginText (page);
 	HPDF_Page_SetFontAndSize (page, font, 13);
 	HPDF_Page_MoveTextPos (page, 20, HPDF_Page_GetHeight (page) - 470);
 	HPDF_Page_ShowText (page, "Commentaire :");
 	HPDF_Page_EndText (page);
 	draw_image (pdf, "tampon-paye-png.png", 400, HPDF_Page_GetHeight (page) - 550);
-
 
 	/* save the document to a file */
 	HPDF_SaveToFile (pdf, fname);
@@ -200,6 +190,7 @@ void draw_line_horizontal(HPDF_Page page, float x, float y){
 	HPDF_Page_LineTo (page, x + 531, y - 15);
 	HPDF_Page_Stroke (page);
 }
+
 void draw_line_horizontal_price(HPDF_Page page, float x, float y){
 	HPDF_Page_BeginText (page);
 	HPDF_Page_MoveTextPos (page, x, y - 10);
@@ -219,6 +210,7 @@ void draw_line_vertical(HPDF_Page page, float x, float y){
 	HPDF_Page_LineTo (page, x, y - 260);
 	HPDF_Page_Stroke (page);
 }
+
 void draw_line_vertical_price(HPDF_Page page, float x, float y){
 	HPDF_Page_BeginText (page);
 	HPDF_Page_MoveTextPos (page, x, y - 10);

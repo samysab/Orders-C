@@ -1,17 +1,16 @@
+// #include "../prototypes.h"
+
 #define TAILLE_MAX 1000
 
 
 char** configuration(){
-    // printf("bonjour config\n");
     FILE* fichier = NULL;
     char chaine[TAILLE_MAX] = "";
     char* str;
     int i = 0;
     int nbLine = 3;
-   // char temp[5][20];
 
-
-    char ** tableau2d = malloc(nbLine*sizeof(char));
+    char** tableau2d = malloc(nbLine*sizeof(char));
 
     for(int i = 0; i < nbLine; ++i){
         tableau2d[i] = malloc(20*sizeof(char));
