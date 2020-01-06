@@ -193,7 +193,7 @@ int insertOrder(sum_t *head, char comment[255]) {
 }
 
 
-void confirmOrder (GtkWidget *btn, void* infos[3]) {
+void confirmOrder (GtkWidget *btn, void* infos[5]) {
 
 	GtkWidget* view = (GtkWidget*)infos[2];
 	GtkTextBuffer* text_buffer=0;
@@ -227,12 +227,18 @@ void confirmOrder (GtkWidget *btn, void* infos[3]) {
 	gtk_dialog_run (GTK_DIALOG (dialog));
 
 
-	if (insertOrder((sum_t*)infos[1], buf))
+	if (insertOrder((sum_t*)infos[1], buf)) {
 		printf("Tout sest bien passe, fin de demonstration\n\n");
-	else
+		// on ferme orderSummary
+		gtk_widget_destroy((GtkWidget*)infos[3]);
+		// on ferme menuWindow
+		gtk_widget_destroy((GtkWidget*)infos[4]);
+		// return;
+	} else {
 		printf("Erreurrrr");
+	}
 
-	gtk_widget_destroy (dialog);
+	gtk_widget_destroy(dialog);
 
 }
 

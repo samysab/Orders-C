@@ -3,13 +3,14 @@ void firstWindow();
 void Windowscommande();
 void adminLoginWindow();
 void newOrder();
+void login_connect(GtkWidget*, GtkWidget**);
 
 void OnDestroy(GtkWidget *pWidget, void* pData);
 void loadTypes(GtkWidget *pWidget, void**);
 void browseList(product_t *);
 void addList(product_t*, int, char name[50], char image_path[50], int);
 void addTypesList(GtkWidget *btn, void** data);
-void orderWindow(GtkWidget*, gpointer);
+void orderWindow(GtkWidget*, void**);
 void removeProduct(GtkWidget*, void**);
 
 

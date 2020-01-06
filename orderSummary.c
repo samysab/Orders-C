@@ -1,9 +1,8 @@
 #include <time.h>
 
-void orderWindow(GtkWidget* btn, gpointer panier){
+void orderWindow(GtkWidget* btn, void** orderVarsArray){
 
-	printf("order ##\n");
-	product_t *head = (product_t*)panier;
+	product_t *head = (product_t*)orderVarsArray[0];
 	browseList(head);
 
 	// Déclaration des widget
@@ -66,12 +65,14 @@ void orderWindow(GtkWidget* btn, gpointer panier){
 	GtkWidget* recap_label;
 	sum_t *list_pointer = sum(head->next);
 
-	void *confirmArray[3];
+	void** confirmArray = malloc(sizeof(void*)*5);
 	confirmArray[0] = pWindow;
 	confirmArray[1] = list_pointer;
 	confirmArray[2] = text_view;
+	confirmArray[3] = pWindow;
+	confirmArray[4] = orderVarsArray[1];
 
-	g_signal_connect (G_OBJECT (pButton[0]), "clicked", G_CALLBACK (confirmOrder), (gpointer) (confirmArray) );
+	g_signal_connect(G_OBJECT(pButton[0]), "clicked", G_CALLBACK(confirmOrder), confirmArray );
 	g_signal_connect(G_OBJECT(pWindow), "destroy", G_CALLBACK(OnDestroy), NULL);
 
 	while (list_pointer != NULL) {

@@ -381,7 +381,11 @@ void Windowscommande() {
 	}
 
 
-	g_signal_connect(G_OBJECT(pButton),"clicked", G_CALLBACK(orderWindow), panier);
+	void** orderVarsArray = malloc(sizeof(void*)*2);
+	orderVarsArray[0] = panier;
+	orderVarsArray[1] = pWindow;
+
+	g_signal_connect(G_OBJECT(pButton),"clicked", G_CALLBACK(orderWindow), orderVarsArray);
 
 	// Connexion du signal "destroy"
 	g_signal_connect(G_OBJECT(pWindow), "destroy", G_CALLBACK(OnDestroy), NULL);

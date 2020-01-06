@@ -1,6 +1,3 @@
-void login_connect(GtkWidget*, GtkWidget**);
-
-
 void adminLoginWindow(){
 
 	// Déclaration des widget 
@@ -52,10 +49,8 @@ void adminLoginWindow(){
 
 	pButton[0] = gtk_button_new_with_label("Connexion");
 
-	// Creation du GtkEntry 
 	pEntryLogin = gtk_entry_new();
 	pEntryPassword = gtk_entry_new();
-	// cacher ce qui est tape
 	gtk_entry_set_visibility(GTK_ENTRY(pEntryPassword), FALSE);
 
 
@@ -66,31 +61,17 @@ void adminLoginWindow(){
 	gtk_table_attach(GTK_TABLE(pTable), pEntryPassword, 1, 3, 2, 4,GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
 	gtk_table_attach(GTK_TABLE(pTable), pButton[0], 1, 3, 3, 4,GTK_EXPAND,  GTK_EXPAND  , 0,0);
 
-	// Connexion du signal "destroy" 
 	g_signal_connect(G_OBJECT(pWindow), "destroy", G_CALLBACK(OnDestroy), NULL);
 
-	// afficher login pass quand on appuie sur login
-	// on cree un tableau dont la nature de donnee est un widget (d'ou le GtkWidget* )
-	// un tableau etant un pointeur, on a donc un pointeur (tableau) de pointeurs (widgets)
 	GtkWidget* creds[2];
 	creds[0] = pEntryLogin;
 	creds[1] = pEntryPassword;
 	g_signal_connect(G_OBJECT(pButton[0]), "clicked", G_CALLBACK(login_connect), creds);
 
-
-	// Permet d'afficher toute les infos sur la fenetre
-	// gtk_container_add(GTK_CONTAINER(pWindow), pLabelAdminPanel);
-	// gtk_box_pack_start(GTK_BOX(rootBox), pLabelAdminPanel, FALSE, FALSE, 0);
-
-	// gtk_container_add(GTK_CONTAINER(pWindow), GTK_WIDGET(pTable));
-
 	gtk_container_add(GTK_CONTAINER(pWindow), pTable);
 
-
-	// gtk_widget_show_all(pWindow); Affichage de la fenêtre */
 	gtk_widget_show_all(pWindow);
 
-	// Demarrage de la boucle evenementielle 
 	gtk_main();
 
 }
@@ -98,44 +79,41 @@ void adminLoginWindow(){
 
 void login_connect(GtkWidget* button_clicked, GtkWidget** credsArray) {
 
-	const char* login;
-	const char* pass;
+	MYSQL mysql;
+	mysql_init(&mysql);
+	mysql_options(&mysql, MYSQL_READ_DEFAULT_GROUP, "option");
 
-	login = gtk_entry_get_text(GTK_ENTRY(credsArray[0]));;
-	pass = gtk_entry_get_text(GTK_ENTRY(credsArray[1]));;
+	char login[10];
+	char pass[10];
+
+	strcpy(login, gtk_entry_get_text(GTK_ENTRY(credsArray[0])));
+	strcpy(pass, gtk_entry_get_text(GTK_ENTRY(credsArray[1])));
 
 	printf("login: %s - pass: %s\n", login, pass);
 
-	// MYSQL mysql;
-	// mysql_init(&mysql);
-	// mysql_options(&mysql, MYSQL_READ_DEFAULT_GROUP, "option");
+	char query[200];
+	sprintf(query, "SELECT adminLogin, adminPassword FROM admins WHERE adminLogin = \"%s\" AND adminPassword = \"%s\"", login, pass);
+
+	printf("query : %s\n", query);
 
 	// if (mysql_real_connect(&mysql, "localhost", "root", "", "burgerc_db", 0, NULL, 0)) {
 
-	// 	mysql_query(&mysql, "SELECT adminLogin, adminPassword FROM admins");
+		// MYSQL_RES *result = NULL;
+		// MYSQL_ROW row;
 
-	// 	MYSQL_RES *result = NULL;
-	// 	MYSQL_ROW row;
 
-	// 	unsigned int num_champs = 0;
+		// printf("bruhhh\n");
+		// mysql_query(&mysql, query);
 
-	// 	result = mysql_use_result(&mysql);
+		// result = mysql_use_result(&mysql);
 
-	// 	num_champs = mysql_num_fields(result);
+		// while ((row = mysql_fetch_row(result))) {
+		// 	printf("voici l'admin %s\n", row[0]);
 
-	// 	// char adminName[100];
+		// }
 
-	// 	// while ((row = mysql_fetch_row(result))) {
-	// 	// 	printf("%s", row[0]);
-	// 	// 	// for (int i = 0; i < num_champs; i++) {
+		// printf("Fin code de bdd\n");
 
-	// 	// 	// 	// loginString = g_locale_to_utf8((char*)row[i], -1, NULL, NULL, NULL);
-	// 	// 	// 	// sprintf(adminName, "Voici un admin : %s\n", row[i]);
-	// 	// 	// 	// puts(adminName);
-	// 	// 	// }
-	// 	// }
-
-	// 	printf("Fin code de bdd ok");
 	// 	mysql_close(&mysql);
 	// } else {
 	// 	printf("Erreur bdd");
