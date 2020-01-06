@@ -8,7 +8,7 @@ void Windowscommande() {
 	GtkWidget *pLabelOrders;
 	GtkWidget *pLabelTotal;
 	gchar* sUtf8;
-	GtkWidget *pButton;
+	GtkWidget *btnValidateOrder;
 	GtkWidget *pTable;
 	GtkWidget *panierWindowScrollbar;
 
@@ -33,7 +33,8 @@ void Windowscommande() {
 	// Création du label Titre
 	pLabelOrdersC = gtk_label_new(NULL);
 	sUtf8 = g_locale_from_utf8("<b><u><span size=\"20\"><span font_family=\"Courier New\">Burger C - Passer commande</span></span></u></b>",-1, NULL,NULL, NULL); //-1 permet de laisser la lib calculer la longueur de la chaine
-	gtk_label_set_markup(GTK_LABEL(pLabelOrdersC), "Burger C - Passer commande");
+	gtk_label_set_markup(GTK_LABEL(pLabelOrdersC), sUtf8);
+	// gtk_label_set_markup(GTK_LABEL(pLabelOrdersC), "Burger C - Passer commande");
 	gtk_label_set_justify(GTK_LABEL(pLabelOrdersC), GTK_JUSTIFY_CENTER);
 
 	// Label Total
@@ -48,7 +49,7 @@ void Windowscommande() {
 	gtk_label_set_markup(GTK_LABEL(pLabelOrders), sUtf8);
 	gtk_label_set_justify(GTK_LABEL(pLabelOrders), GTK_JUSTIFY_CENTER);
 
-	pButton = gtk_button_new_with_label("Valider la commande");
+	btnValidateOrder = gtk_button_new_with_label("Valider la commande");
 
 	panierWindowScrollbar = gtk_scrolled_window_new(NULL, NULL);
 	GtkWidget* panierRootbox = gtk_hbox_new(FALSE, 0);
@@ -58,21 +59,18 @@ void Windowscommande() {
 	gtk_table_set_row_spacing(GTK_TABLE(pTable), 4, 25);
 
 
-	gtk_table_attach(GTK_TABLE(pTable), pLabelOrdersC, 1, 2, 0, 1, GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
+	gtk_table_attach(GTK_TABLE(pTable), pLabelOrdersC, 2, 4, 0, 1, GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
 	gtk_table_attach(GTK_TABLE(pTable), pLabelTotal, 0, 1, 5, 6, GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
 	gtk_table_attach(GTK_TABLE(pTable), pLabelOrders, 0, 1, 6, 7, GTK_EXPAND| GTK_FILL , GTK_EXPAND, 0,0);
-	gtk_table_attach(GTK_TABLE(pTable), pButton, 5, 6, 6, 7, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
+	gtk_table_attach(GTK_TABLE(pTable), btnValidateOrder, 5, 6, 6, 7, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
 	gtk_table_attach(GTK_TABLE(pTable), panierWindowScrollbar, 1, 5, 5, 7, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0,0);
 
 
-
-	/*
-	* Partie 1) Récupérer les types, supprimer les doublons et les afficher
-	* Partie 2) Fonction qui récupère les produits selon une catégorie donnée et les ajoute
-	*/
+	// par defaut on peut pas appuyer sur le bouton Valider si on n'a aucun produit dans le panier
+	gtk_widget_set_sensitive(btnValidateOrder, FALSE);
 
 
-
+	// creation de la liste chainee du panier
 	product_t *panier = NULL;
 
 	panier = malloc(sizeof(product_t));
@@ -232,7 +230,7 @@ void Windowscommande() {
 
 		// on cree le tableau qui contiendra nos widgets de reference
 		void** widgetsTab;
-		widgetsTab = malloc(sizeof(void*) * 8);
+		widgetsTab = malloc(sizeof(void*) * 9);
 		widgetsTab[0] = pTable;
 		widgetsTab[1] = scrolledWindow;
 		widgetsTab[2] = &mysql;
@@ -241,7 +239,7 @@ void Windowscommande() {
 		widgetsTab[5] = loadTypesList;
 		widgetsTab[6] = &totalPanier;
 		widgetsTab[7] = pLabelTotal;
-
+		widgetsTab[8] = btnValidateOrder;
 
 
 
@@ -385,7 +383,7 @@ void Windowscommande() {
 	orderVarsArray[0] = panier;
 	orderVarsArray[1] = pWindow;
 
-	g_signal_connect(G_OBJECT(pButton),"clicked", G_CALLBACK(orderWindow), orderVarsArray);
+	g_signal_connect(G_OBJECT(btnValidateOrder),"clicked", G_CALLBACK(orderWindow), orderVarsArray);
 
 	// Connexion du signal "destroy"
 	g_signal_connect(G_OBJECT(pWindow), "destroy", G_CALLBACK(OnDestroy), NULL);

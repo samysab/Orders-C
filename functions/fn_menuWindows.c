@@ -98,6 +98,12 @@ void addTypesList(GtkWidget *btn, void** data) {
 	printf("%s\n", loadList->image_path);
 	printf("%d\n", loadList->price);
 
+	// on rend le bouton cliquable puisqu'on vient dajouter un produit
+	if (*(int*)data[6] == 0) {
+		gtk_widget_set_sensitive((GtkWidget*)data[8], TRUE);
+	}
+
+
 	// On augmente la somme total du panier
 	*(int*)data[6] += loadList->price;
 	printf("\n####### nouveau total : %d\n", *(int*)data[6]);
@@ -154,13 +160,14 @@ void addTypesList(GtkWidget *btn, void** data) {
 		enleverButton = gtk_button_new_with_label("Retirer");
 
 		void** removeInfos;
-		removeInfos = malloc(sizeof(void*) * 5);
+		removeInfos = malloc(sizeof(void*) * 6);
 		removeInfos[0] = data[3];
 		removeInfos[1] = malloc(sizeof(char) * 50);
 		strcpy(removeInfos[1], current->name);
 		removeInfos[2] = data[6];
 		removeInfos[3] = &current->price;
 		removeInfos[4] = data[7];
+		removeInfos[5] = data[8];
 
 		g_signal_connect(G_OBJECT(enleverButton), "clicked", G_CALLBACK(removeProduct), removeInfos);
 
@@ -194,6 +201,7 @@ void addTypesList(GtkWidget *btn, void** data) {
 	// et le prix a soustraire
 	removeInfos[3] = &loadList->price;
 	removeInfos[4] = data[7];
+	removeInfos[5] = data[8];
 
 
 	g_signal_connect(G_OBJECT(enleverButton), "clicked", G_CALLBACK(removeProduct), removeInfos);
@@ -269,6 +277,12 @@ void removeProduct(GtkWidget* btn, void** removeInfos) {
 	printf("[[[[ %d - %d ]]]]\n", *total, prix_du_produit_retire);
 	*(int*)removeInfos[2] -= prix_du_produit_retire;
 	printf("[[[[[ == %d == ]]]]]\n", *total);
+	
+	if (*total == 0) {
+		printf("desactiver btn\n");
+		gtk_widget_set_sensitive((GtkWidget*)removeInfos[5], FALSE);
+	}
+
 
 	char label_total[20];
 	sprintf(label_total, "Total : %d euros", *total);

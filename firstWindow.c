@@ -5,7 +5,7 @@ void firstWindow() {
 	GtkWidget *pLabelOrdersC;
 	GtkWidget *pLabelDescription;
 	gchar* sUtf8;
-	GtkWidget *pButton[3];
+	GtkWidget* pButton[3];
 	GtkWidget *pTable;
 
 	// Création de la fenêtre
