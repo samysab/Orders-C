@@ -2,16 +2,18 @@
 * Ce fichier permet de definir certaine option modifiable par le client.
 * Chaque options doivent etre separer pas des ";"
 *
-* borneLocation : McDo, SeaFood, AsiaFood
+* borneLocation : Fastfood, Asianfood
 *
 *
 */
 
 
 
-[Propriete1]
-	[Export PDF]
+[Export PDF]
+Nom du fichier PDF = Facture;
 
-	Nom du fichier PDF = Facture;
-	couleur = test;
-	borneLocation = SeaFood;
+[Couleur]
+couleur = red;
+
+[Type de la borne]
+borneLocation = Asianfood;

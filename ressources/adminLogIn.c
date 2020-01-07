@@ -79,9 +79,9 @@ void adminLoginWindow(){
 
 void login_connect(GtkWidget* button_clicked, GtkWidget** credsArray) {
 
-	MYSQL mysql;
-	mysql_init(&mysql);
-	mysql_options(&mysql, MYSQL_READ_DEFAULT_GROUP, "option");
+	// MYSQL mysql;
+	// mysql_init(&mysql);
+	// mysql_options(&mysql, MYSQL_READ_DEFAULT_GROUP, "option");
 
 	char login[10];
 	char pass[10];

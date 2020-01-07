@@ -28,6 +28,6 @@ void draw_line_vertical(HPDF_Page page, float x, float y);
 void draw_line_horizontal_price(HPDF_Page page, float x, float y);
 void draw_line_horizontal(HPDF_Page page, float x, float y);
 void draw_image (HPDF_Doc pdf, const char *filename, float x, float y);
-void pdgPage(char** tableau2d, sum_t *head);
+void pdgPage(char** tableau2d, sum_t *head, char comment[250]);
 
 char** configuration();

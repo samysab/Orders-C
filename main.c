@@ -17,18 +17,18 @@
 #include <setjmp.h>
 #include "hpdf.h"
 
-#include "structures.h"
-#include "prototypes.h"
+#include "ressources/structures.h"
+#include "ressources/prototypes.h"
 
-#include "functions/config.c"
-#include "functions/fn_menuWindows.c"
-#include "functions/fn_orderSummary.c"
-#include "functions/exportPdf.c"
+#include "ressources/functions/config.c"
+#include "ressources/functions/fn_menuWindows.c"
+#include "ressources/functions/fn_orderSummary.c"
+#include "ressources/functions/exportPdf.c"
 
-#include "menuWindow.c"
-#include "orderSummary.c"
-#include "adminLogIn.c"
-#include "firstWindow.c"
+#include "ressources/menuWindow.c"
+#include "ressources/orderSummary.c"
+#include "ressources/adminLogIn.c"
+#include "ressources/firstWindow.c"
 
 
 int main(int argc,char **argv) {

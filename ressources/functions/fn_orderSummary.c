@@ -102,7 +102,7 @@ int insertInOrders(int productId, int orderId, char name[50]) {
 
 		return 1;
 	} else {
-		printf("errrrrrrrrrrr");
+		printf("Erreur bdd insertOrder");
 		return 0;
 	}
 
@@ -114,7 +114,7 @@ int insertOrder(sum_t *head, char comment[255]) {
 	mysql_options(&mysql, MYSQL_READ_DEFAULT_GROUP, "option");
 
 
-	printf("RECAAAAAAAAAP\n");
+	printf("Recapitulatif :\n");
 	sum_t* curr = head;
 	while (curr != NULL) {
 		printf("INFOS : name(%s), id(%d), nb(%d), price(%d)\n", curr->name, curr->id, curr->nb, curr->price);
@@ -127,7 +127,7 @@ int insertOrder(sum_t *head, char comment[255]) {
 
 
 
-	printf("alors : %s\n", comment);
+	printf("Commentaire : %s\n", comment);
 
 	if (mysql_real_connect(&mysql, "localhost", "root", "", "burgerc_db", 0, NULL, 0)) {
 		int rowCount;
@@ -167,7 +167,7 @@ int insertOrder(sum_t *head, char comment[255]) {
 
 		char** config = configuration();
 
-		pdgPage(config, current);
+		pdgPage(config, current, comment);
 
 		while (current != NULL) {
 			for (i = 0; i < current->nb; i++) {
@@ -180,7 +180,7 @@ int insertOrder(sum_t *head, char comment[255]) {
 
 		// mysql_close(&mysql);
 
-		printf("fin");
+		printf("fin,\n");
 
 	} else {
 		printf("Erreur lors de l'ajout de la commande a la base de donnees\n");

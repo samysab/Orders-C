@@ -16,13 +16,16 @@ error_handler  (HPDF_STATUS   error_no,
 	longjmp(env, 1);
 }
 //char** tableau2d
-void pdgPage(char** tableau2d, sum_t *head) {
+void pdgPage(char** tableau2d, sum_t *head, char param_commentaire[250]) {
 	const char* page_title = "Burger C - Bon de commande";
 
 	HPDF_Doc  pdf;
 	HPDF_Font font;
 	HPDF_Page page;
 	char fname[256] = "";
+
+	char commentaire[250];
+	strcpy(commentaire, param_commentaire);
 
 	float tw;
 
@@ -171,6 +174,13 @@ void pdgPage(char** tableau2d, sum_t *head) {
 	HPDF_Page_MoveTextPos (page, 20, HPDF_Page_GetHeight (page) - 470);
 	HPDF_Page_ShowText (page, "Commentaire :");
 	HPDF_Page_EndText (page);
+
+	HPDF_Page_BeginText (page);
+	HPDF_Page_SetFontAndSize (page, font, 13);
+	HPDF_Page_MoveTextPos (page, 120, HPDF_Page_GetHeight (page) - 470);
+	HPDF_Page_ShowText (page, commentaire);
+	HPDF_Page_EndText (page);
+
 	draw_image (pdf, "tampon-paye-png.png", 400, HPDF_Page_GetHeight (page) - 550);
 
 	/* save the document to a file */

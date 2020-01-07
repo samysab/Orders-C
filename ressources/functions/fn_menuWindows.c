@@ -15,13 +15,6 @@
 
 
 
-
-
-
-
-
-
-
 // fonction pour afficher une liste
 void browseList(product_t *head) {
 	printf("\n### Browse list ###\n");
@@ -34,7 +27,6 @@ void browseList(product_t *head) {
 		current = current->next;
 	}
 }
-
 
 
 
@@ -243,7 +235,7 @@ void addTypesList(GtkWidget *btn, void** data) {
 	browseList(panier);
 
 
-	printf("went through\n");
+	// printf("Fin boucle addTypesList\n");
 }
 
 
@@ -389,7 +381,7 @@ void loadTypes(GtkWidget *btn, void** widgetsTab) {
 
 			burger_image = gtk_image_new_from_file(row[2]);
 
-			sUtf8 = g_locale_to_utf8(strcat(row[3], " €"), -1, NULL, NULL, NULL);
+			sUtf8 = g_locale_to_utf8(strcat(row[3], " e"), -1, NULL, NULL, NULL);
 			burger_price = gtk_label_new(sUtf8);
 
 

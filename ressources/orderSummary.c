@@ -77,7 +77,7 @@ void orderWindow(GtkWidget* btn, void** orderVarsArray){
 
 	while (list_pointer != NULL) {
 
-		printf("%s : %d\n", list_pointer->name, list_pointer->nb);
+		// printf("%s : %d\n", list_pointer->name, list_pointer->nb);
 
 		char recap_str[50];
 		sprintf(recap_str, "%d x %s", list_pointer->nb, list_pointer->name);
